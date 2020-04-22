@@ -5,7 +5,7 @@ import threading
 import queue #used to pass the username-password data to ClientNetworkThread
 from time import sleep
 
-qMessage = queue.Queue(2) #only the login data is there for the networkThread to consume,
+qMessage = queue.Queue(1) #only the login data is there for the networkThread to consume,
                           #so queue capacity = 1
 
 
@@ -36,7 +36,7 @@ class ClientNetworkThread(threading.Thread):
                     messageToServer.encode()
                     mySocket.send(messageToServer)
                     serverAuthResponse = mySocket.recv(1024).decode()
-                    
+
             
         except: 
             mb.showerror("Error", "Connection to server failed or closed.")
@@ -45,8 +45,6 @@ class ClientNetworkThread(threading.Thread):
 
 
     
-
-
     
 
 #------------GUI
