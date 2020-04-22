@@ -15,20 +15,13 @@ while 1:
     print("Waiting for connection...")
     serverSocket.listen()
     connection, address = serverSocket.accept()
-
     print("Connection is recieved from, ", address[0])
-    
-    message = "SERVER >>> Connection successful".encode()
-    connection.send(message)
-
-    clientResponse = connection.recv(1024).decode()
-    while clientResponse != "CLIENT >>> TERMINATE":
-        print(clientResponse)
-        message = input("SERVER >>> ")
-        message = ("SERVER >>> " + message).encode()
+    clientResponse = "hey client"
+    while "auth" not in clientResponse: #no login data is received yet
+        message = "waiting for auth".encode()
         connection.send(message)
+        print(clientResponse)
         clientResponse = connection.recv(1024).decode()
-    message = "SERVER >>> Successfully terminated".encode()
-    connection.send(message)
-    connection.close()
-    print("Connection terminated successfully.")
+    print("Client sent auth: ", clientResponse)
+    authResult = "You authed bro".encode()
+    connection.send(authResult)
