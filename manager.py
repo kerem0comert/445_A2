@@ -28,15 +28,15 @@ class ClientNetworkThread(threading.Thread):
             serverResponse = mySocket.recv(1024).decode()
             print(serverResponse)
             while serverResponse == "waiting for auth": #server is waiting for login data 
-                print("yeaa")
                 while qMessage.empty(): sleep(1)
                 if not qMessage.empty(): #login data came from the gui
-                    messageToServer = qMessage.get()
-                    print("network thread: ", messageToServer)
-                    messageToServer.encode()
-                    mySocket.send(messageToServer)
+                    messageToServer = qMessage.get().encode()
+                    try: mySocket.send(messageToServer)
+                    except Exception as e: print(e)
                     serverAuthResponse = mySocket.recv(1024).decode()
-
+                    print("Server auth response: ", serverAuthResponse)
+                    if int(serverAuthResponse) == 1: 
+                        mb.showinfo("Login", "Logged in successfully!")
             
         except: 
             mb.showerror("Error", "Connection to server failed or closed.")
@@ -63,7 +63,7 @@ entryUsername = tk.Entry(root, width=20)
 #the grid decleration for the entries has to be divided into multiple lines
 #see https://stackoverflow.com/a/1102053/11330757
 entryUsername.grid(row=0,column=1)
-entryPassword = tk.Entry(root, width=20)
+entryPassword = tk.Entry(root,  show="*", width=20)
 entryPassword.grid(row=1,column=1)
 
 
