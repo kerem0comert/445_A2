@@ -37,7 +37,7 @@ class ClientNetworkThread(threading.Thread):
                     print("Server auth response: ", serverAuthResponse)
                     if int(serverAuthResponse) == 1: 
                         mb.showinfo("Login", "Logged in successfully!")
-            
+                        
         except: 
             mb.showerror("Error", "Connection to server failed or closed.")
             self.lblConnection.config(text="Connection to server failed.\n"
@@ -52,8 +52,8 @@ class ClientNetworkThread(threading.Thread):
 root = tk.Tk()   #initialize the tkinter window
 root.title("Manager Login")
 root.geometry("250x130")
-root.eval('tk::PlaceWindow %s center' % root.winfo_pathname(
-                root.winfo_id())) #center the window when created
+#root.eval('tk::PlaceWindow %s center' % root.winfo_pathname(
+                #root.winfo_id())) #center the window when created
 
 
 labelUsername = tk.Label(root, text="Username: ").grid(row=0,column=0)
