@@ -22,8 +22,7 @@ while 1:
         connection.send(message)
         clientResponse = connection.recv(1024).decode()
     print("Client sent auth:", clientResponse) 
-    responseArray = clientResponse.split(";")
-    #responseArray = [authHeader, username, password]
+    responseArray = clientResponse.split(";") #responseArray = [authHeader, username, password]
     username = responseArray[1]
     password = responseArray[2]
     #here username and password has to be checked in the database
