@@ -3,7 +3,10 @@ import tkinter.messagebox as mb #messagebox doesn't get imported implicitly by t
 import socket
 import threading
 import queue #used to pass the username-password data to ClientNetworkThread
+import login
 from time import sleep
+from login import loginGui
+from tkinter import Tk
 
 qMessage = queue.Queue(1) #only the login data is there for the networkThread to consume,
                           #so queue capacity = 1
@@ -45,50 +48,10 @@ class ClientNetworkThread(threading.Thread):
 
 
     
-    
-
-#------------GUI
-
-root = tk.Tk()   #initialize the tkinter window
-root.title("Manager Login")
-root.geometry("250x130")
-#root.eval('tk::PlaceWindow %s center' % root.winfo_pathname(
-                #root.winfo_id())) #center the window when created
-
-
-labelUsername = tk.Label(root, text="Username: ").grid(row=0,column=0)
-labelPassword = tk.Label(root, text= "Password: ").grid(row=1,column=0)
-entryUsername = tk.Entry(root, width=20)
-
-#the grid decleration for the entries has to be divided into multiple lines
-#see https://stackoverflow.com/a/1102053/11330757
-entryUsername.grid(row=0,column=1)
-entryPassword = tk.Entry(root,  show="*", width=20)
-entryPassword.grid(row=1,column=1)
-
-
-def onLoginClick():
-    username = entryUsername.get()
-    password = entryPassword.get() 
-    if not username: mb.showerror("Error", "Username cannot be empty!")
-    if not password: mb.showerror("Error", "Password cannot be empty!")
-    else: 
-        messageToServer = "auth" + ";" + username + ";" + password
-        print("onclick: ", messageToServer)
-        if not qMessage.full(): qMessage.put(messageToServer) #send the login data to network thread
-        root.update()
-
-
-buttonLogin = tk.Button(root,text="Login",bg="blue",fg="white", 
-                            command = onLoginClick)
-buttonLogin.grid(row=2,column=1)
-labelConnection = tk.Label(root, text="Trying to connect to the server...")
-labelConnection.grid(row=3,column=1)
-
-clientNetworkThread = ClientNetworkThread(root, labelConnection)
-clientNetworkThread.start()
-
-root.mainloop() #this should be called after all the inits
-
-
+if __name__ == '__main__':
+    root = Tk()
+    root.geometry('425x225')
+    loginAsManager = loginGui(root)
+    if not qMessage.full(): qMessage.put(loginAsManager.messageToServer) #send the login data to network thread
+    root.mainloop()
 
