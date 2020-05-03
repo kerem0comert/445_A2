@@ -39,8 +39,12 @@ class ManagerGui():
         localVisitors = self.entryLocalVisitors.get() 
         tourists = self.entryTourists.get() 
         if (not totVisitors or not maleVisitors or not femaleVisitors or 
-            not localVisitors or not tourists): 
+            not localVisitors or not tourists):
+            # create another Tk root just for preventing create second empty window when info mb displayed
+            self.root = tk.Tk()
+            self.root.withdraw()
             mb.showerror("Error", "Everything has to be filled out!")
+            self.root.destroy()
         else: 
             messageToServer = "insertDetails" + ";" + totVisitors + ";" + maleVisitors + ";" + femaleVisitors + ";" + localVisitors + ";" + tourists #record message
             print("onclick: ", messageToServer)

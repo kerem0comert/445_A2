@@ -26,12 +26,15 @@ class ClientNetworkThread(threading.Thread):
         HOST = 'localhost'
         PORT = 5000
         print("Attempting connection...")
+        global mySocket
         mySocket = socket.socket(socket.AF_INET, #for ipv4 communiciation
                                 socket.SOCK_STREAM # TCP Protocol
                                 )
         try: 
             mySocket.connect((HOST,PORT))
             print("Connected to server.")
+            managerLoginGui.labelConnection.config(text='Connected to server')
+            managerLoginGui.buttonLogin.config(state="normal")
             #self.lblConnection.config(text="Connection to server is successful!", fg="green")
             serverResponse = mySocket.recv(1024).decode()
             print(serverResponse)
@@ -59,8 +62,9 @@ class ClientNetworkThread(threading.Thread):
                             self.root = tk.Tk()
                             self.root.withdraw()
                             mb.showinfo("Success", "Insertion successful")
+                            self.root.destroy()
                             # kill proccess here, we dont have anything to do left
-                            os._exit(0)
+                            end_app()
 
 
                         elif int(serverAuthResponse) == 1:
@@ -73,14 +77,19 @@ class ClientNetworkThread(threading.Thread):
                     except Exception as e: print(e)
         except: 
             mb.showerror("Error", "Connection to server failed or closed.")
-            """self.lblConnection.config(text="Connection to server failed.\n"
-                                   "Restart the program to try again.", fg="red")"""
+            os._exit(0)
 
-
+def end_app():
+    try:
+        mySocket.close()
+    except Exception as e: print("")
+    os._exit(0)
     
 if __name__ == '__main__':
     loginRoot = tk.Tk()
     loginRoot.geometry('250x130')
+    loginRoot.protocol("WM_DELETE_WINDOW", end_app)
+    loginRoot.resizable(False, False)
     print("Main Thread:", threading.get_ident())
     #root.eval('tk::PlaceWindow %s center' % root.winfo_pathname(
     #   root.winfo_id())) #center the window when created
@@ -99,6 +108,8 @@ if __name__ == '__main__':
     if(loginStatus == MANAGER_SUCCESS):
         managerGuiRoot = tk.Tk()
         managerGuiRoot.geometry('450x300')
+        managerGuiRoot.protocol("WM_DELETE_WINDOW", end_app)
+        managerGuiRoot.resizable(False, False)
         print("Main Thread:", threading.get_ident())
         managerGui = ManagerGui(managerGuiRoot, qMessage)
         managerGuiRoot.mainloop()

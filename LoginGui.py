@@ -14,11 +14,10 @@ class LoginGui():
         #the grid decleration for the entries has to be divided into multiple lines
         #see https://stackoverflow.com/a/1102053/11330757
         self.entryUsername.grid(row=0,column=1)
-        self.entryPassword = tk.Entry(root,  show="*", width=20)
+        self.entryPassword = tk.Entry(root, show="*", width=20)
         self.entryPassword.grid(row=1,column=1)
 
-        self.buttonLogin = tk.Button(root,text="Login",bg="blue",fg="white", 
-                            command = self.onLoginClick)
+        self.buttonLogin = tk.Button(root, text="Login", bg="blue", fg="white", state='disabled', command = self.onLoginClick)
         self.buttonLogin.grid(row=2,column=1)
         self.labelConnection = tk.Label(root, text="Trying to connect to the server...")
         self.labelConnection.grid(row=3,column=1)
@@ -30,7 +29,8 @@ class LoginGui():
         password = self.entryPassword.get() 
         if not username: mb.showerror("Error", "Username cannot be empty!")
         if not password: mb.showerror("Error", "Password cannot be empty!")
-        else: 
+        else:
+            self.buttonLogin.config(state="disabled")
             messageToServer = "auth" + ";" + username + ";" + password
             print("onclick: ", messageToServer)
             if not self.qMessage.full(): self.qMessage.put(messageToServer) #send the login data to network thread

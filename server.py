@@ -10,13 +10,14 @@ class ServerThread(threading.Thread):
         threading.Thread.__init__(self)
        
 
-    def run(self): 
-        clientResponse = ""
-        while "auth" not in clientResponse: #no login data is received yet
-            message = "waiting for auth".encode()
-            self.connection.send(message)
-            clientResponse = self.connection.recv(1024).decode()
-        print("Client sent auth:", clientResponse) 
+    def run(self):
+        print(self.address, ": Connection Established!")
+        self.connection.send("waiting for auth".encode())
+        clientResponse = self.connection.recv(1024).decode()
+        if not clientResponse:
+            print(self.address, ": Connection Closed!")
+            quit()
+        print(self.address, ": Client sent auth:", clientResponse) 
         responseArray = clientResponse.split(";") #responseArray = [authHeader, username, password]
         username = responseArray[1]
         password = responseArray[2]
@@ -27,11 +28,16 @@ class ServerThread(threading.Thread):
         #  if login fail -> send 0
         authResult = "2".encode() #bad practice to send plain int's without header to client
         self.connection.send(authResult)
-        print("auth result sent.")
+        print(self.address, ": auth result sent.")
         clientQueryResponse = clientResponse = self.connection.recv(1024).decode()
-        print(clientQueryResponse)
+        if not clientQueryResponse:
+            print(self.address, ": Connection Closed!")
+            quit()
+        print(self.address, ": clientQueryResponse :", clientQueryResponse)
         queryResult = "QUERY INSERTION SUCCESSS".encode()
         self.connection.send(queryResult)
+        print(self.address, ": Finished!")
+        quit()
         
 
 
@@ -43,9 +49,15 @@ serverSocket = socket.socket(socket.AF_INET, #for ipv4 communiciation
                         socket.SOCK_STREAM # TCP Protocol
                         )
 
-serverSocket.bind((HOST,PORT))
-
-
+try:
+    serverSocket.bind((HOST,PORT))
+except Exception as e:
+    print("FATAL ERROR!")
+    print("Could not bind port", PORT, "on", HOST, "!")
+    print("Maybe socket is being used?")
+    print("")
+    print("BYE!")
+    quit()
 
 #auth -> [header, username, password]
 #adminQuery -> [header, selection]
