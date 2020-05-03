@@ -2,6 +2,7 @@ import tkinter as tk
 import tkinter.messagebox as mb #messagebox doesn't get imported implicitly by the above import 
 import socket
 import threading
+import os
 import queue #used to pass the username-password data to ClientNetworkThread
 from time import sleep
 from LoginGui import *
@@ -34,7 +35,7 @@ class ClientNetworkThread(threading.Thread):
             #self.lblConnection.config(text="Connection to server is successful!", fg="green")
             serverResponse = mySocket.recv(1024).decode()
             print(serverResponse)
-            while serverResponse == "waiting for auth": #server is waiting for login data 
+            if serverResponse == "waiting for auth": #server is waiting for login data 
                 while qMessage.empty(): sleep(1)
                 if not qMessage.empty(): #login data came from the gui
                     messageToServer = qMessage.get().encode()
@@ -54,7 +55,12 @@ class ClientNetworkThread(threading.Thread):
                             queryToServer = qMessage.get().encode()
                             mySocket.send(queryToServer)
                             serverQueryResponse = mySocket.recv(1024).decode()
+                            # create another Tk root just for preventing create second empty window when info mb displayed
+                            self.root = tk.Tk()
+                            self.root.withdraw()
                             mb.showinfo("Success", "Insertion successful")
+                            # kill proccess here, we dont have anything to do left
+                            os._exit(0)
 
 
                         elif int(serverAuthResponse) == 1:
@@ -62,8 +68,8 @@ class ClientNetworkThread(threading.Thread):
                             qMessage.put(ADMIN_SUCCESS)
                             #self.root.destroy()
                         
-                        while qMessage.empty(): sleep(1)
-                        print("in thread: ", qMessage.get())
+                        #while qMessage.empty(): sleep(1)
+                        #print("in thread: ", qMessage.get())
                     except Exception as e: print(e)
         except: 
             mb.showerror("Error", "Connection to server failed or closed.")

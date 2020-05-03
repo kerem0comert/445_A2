@@ -1,5 +1,4 @@
-from tkinter import *
-from tkinter import ttk
+import tkinter as tk
 import tkinter.messagebox as mb
 
 #from DBMS_Project import *
@@ -10,27 +9,27 @@ class ManagerGui():
     def __init__(self,root, qMessage):
         root.title('MANAGER SCREEN')
         self.qMessage = qMessage
-        Label(root, text = ' Total Number Of Visitors ',font='Times 15').grid(row=1,column=1,pady=20)
-        self.entryTotVisitors = Entry(root)
+        tk.Label(root, text = ' Total Number Of Visitors ',font='Times 15').grid(row=1,column=1,pady=20)
+        self.entryTotVisitors = tk.Entry(root)
         self.entryTotVisitors.grid(row=1,column=2,columnspan=10)
 
-        Label(root, text = ' The Number Of Male Visitors ',font='Times 15').grid(row=2,column=1,pady=10)
-        self.entryMaleVisitors = Entry(root)
+        tk.Label(root, text = ' The Number Of Male Visitors ',font='Times 15').grid(row=2,column=1,pady=10)
+        self.entryMaleVisitors = tk.Entry(root)
         self.entryMaleVisitors.grid(row=2,column=2,columnspan=10)
 
-        Label(root, text = ' The Number Of Female Visitors ',font='Times 15').grid(row=3,column=1,pady=10)
-        self.entryFemaleVisitors = Entry(root)
+        tk.Label(root, text = ' The Number Of Female Visitors ',font='Times 15').grid(row=3,column=1,pady=10)
+        self.entryFemaleVisitors = tk.Entry(root)
         self.entryFemaleVisitors.grid(row=3,column=2,columnspan=10)
 
-        Label(root, text = ' The Number Of Local Visitors ',font='Times 15').grid(row=4,column=1,pady=10)
-        self.entryLocalVisitors = Entry(root)
+        tk.Label(root, text = ' The Number Of Local Visitors ',font='Times 15').grid(row=4,column=1,pady=10)
+        self.entryLocalVisitors = tk.Entry(root)
         self.entryLocalVisitors.grid(row=4,column=2,columnspan=10)
 
-        Label(root, text = ' The Number Of Tourists ',font='Times 15').grid(row=5,column=1,pady=10)
-        self.entryTourists = Entry(root)
+        tk.Label(root, text = ' The Number Of Tourists ',font='Times 15').grid(row=5,column=1,pady=10)
+        self.entryTourists = tk.Entry(root)
         self.entryTourists.grid(row=5,column=2,columnspan=10)
 
-        ttk.Button(root, text='REPORT',command=self.reportData).grid(row=6,column=2)
+        tk.Button(root, text='REPORT',command=self.reportData).grid(row=6,column=2)
 
 
     def reportData(self):
