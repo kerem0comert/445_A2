@@ -21,8 +21,6 @@ class LoginGui():
         self.buttonLogin.grid(row=2,column=1)
         self.labelConnection = tk.Label(root, text="Trying to connect to the server...")
         self.labelConnection.grid(row=3,column=1)
-        
-
 
     def onLoginClick(self):
         username = self.entryUsername.get()

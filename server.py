@@ -8,7 +8,6 @@ class ServerThread(threading.Thread):
         self.connection = connection
         self.address = address
         threading.Thread.__init__(self)
-       
 
     def run(self):
         print(self.address, ": Connection Established!")
@@ -38,17 +37,13 @@ class ServerThread(threading.Thread):
         self.connection.send(queryResult)
         print(self.address, ": Finished!")
         quit()
-        
-
 
 HOST = 'localhost'
 PORT = 5000
 
-
 serverSocket = socket.socket(socket.AF_INET, #for ipv4 communiciation
                         socket.SOCK_STREAM # TCP Protocol
                         )
-
 try:
     serverSocket.bind((HOST,PORT))
 except Exception as e:

@@ -45,7 +45,6 @@ class AdminGui():
         tk.Button(text='CREATE REPORT',command= self.createQuery).pack()
         print(self.v)
 
-
     def createQuery(self):
         selection = self.v.get()
         if(selection == 0): 
@@ -56,9 +55,7 @@ class AdminGui():
         #root.destroy()
 
 if __name__ == '__main__':  # this is to test the gui
-
     root = tk.Tk()
     root.geometry('500x300')
     application = AdminGui(root)
-
     root.mainloop()
