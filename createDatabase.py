@@ -1,30 +1,95 @@
 import sqlite3
+import os
 
+# Check if there is a db file already exists
+if os.path.exists("assignment2.db"):
+    print("Remove assignment2.db before creating a new one!")
+    quit()
+
+# Create the DB file
 connection = sqlite3.connect('assignment2.db')
+
+# Enable foreign keys
+connection.execute('PRAGMA foreign_keys = 1')
+
+# Create tables
 connection.execute('''CREATE TABLE CITY
-                      (cityCode INT PRIMARY KEY NOT NULL,
+                      (cityCode INT PRIMARY KEY,
                        cityName TEXT NOT NULL
                       );''')
+connection.execute('''CREATE TABLE ROLES
+                      (roleID INT PRIMARY KEY,
+                       roleName TEXT NOT NULL
+                      );''')                      
 connection.execute('''CREATE TABLE HISTORICAL_PLACE
-                      (hpCode INT PRIMARY KEY NOT NULL,
-                       hpName TEXT NOT NULL
+                      (hpCode INT PRIMARY KEY,
+                       hpName TEXT NOT NULL,
+                       hpCityCode INT NOT NULL,
+                       FOREIGN KEY(hpCityCode) REFERENCES CITY(cityCode)
                       );''')
 connection.execute('''CREATE TABLE STAFF
-                      (staffID INT PRIMARY KEY NOT NULL,
-                       username TEXT NOT NULL,
-                       password TEXT NOT NULL
-                      );''')                
-
-"""It would be more appropriate to call this a 'visit' since it is not keeping track of 
-any individual visitors but keeps track of a whole visit of many visitors with its numeric details"""
-
-connection.execute('''CREATE TABLE VISIT
-                      (date TIMESTAMP PRIMARY KEY NOT NULL,
-                       localVisitors INT NOT NULL,
-                       tourists INT NOT NULL,
-                       males INT NOT NULL,
-                       females INT NOT NULL
+                      (staffID INT PRIMARY KEY,
+                       username TEXT NOT NULL UNIQUE,
+                       password TEXT NOT NULL,
+                       roleID INT NOT NULL,
+                       FOREIGN KEY (roleID) REFERENCES ROLES(roleID) ON UPDATE CASCADE
                       );''')
+connection.execute('''CREATE TABLE HISTORICAL_PLACE_MANAGERS
+                      (staffID INT PRIMARY KEY,
+                       hpCode TEXT NOT NULL UNIQUE,
+                       FOREIGN KEY (staffID) REFERENCES STAFF(staffID) ON DELETE CASCADE
+                       FOREIGN KEY (hpCode) REFERENCES HISTORICAL_PLACE(hpCode) ON DELETE CASCADE
+                      );''')
+connection.execute('''CREATE TABLE VISITOR
+                      (ID INT PRIMARY KEY,
+                       date TIMESTAMP NOT NULL,
+                       numOfTourists INT NOT NULL,
+                       numOfLocalVisitors INT NOT NULL,
+                       numOfMaleVisitors INT NOT NULL,
+                       numOfFemaleVisitors INT NOT NULL,
+                       hpCode INT NOT NULL,
+                       FOREIGN KEY (hpCode) REFERENCES HISTORICAL_PLACE(hpCode) ON UPDATE CASCADE
+                      );''')
+
+# Insert the values to tables
+connection.execute('''INSERT INTO CITY (cityCode,cityName) VALUES (1, 'Gazimagusa');''')
+connection.execute('''INSERT INTO CITY (cityCode,cityName) VALUES (2, 'Girne');''')
+connection.execute('''INSERT INTO CITY (cityCode,cityName) VALUES (3, 'Guzelyurt');''')
+connection.execute('''INSERT INTO CITY (cityCode,cityName) VALUES (4, 'Iskele');''')
+connection.execute('''INSERT INTO CITY (cityCode,cityName) VALUES (5, 'Lefke');''')
+connection.execute('''INSERT INTO CITY (cityCode,cityName) VALUES (6, 'Lefkosa');''')
+
+connection.execute('''INSERT INTO ROLES (roleID,roleName) VALUES (1, 'Administrator');''')
+connection.execute('''INSERT INTO ROLES (roleID,roleName) VALUES (2, 'Historical Place Manager');''')
+
+connection.execute('''INSERT INTO HISTORICAL_PLACE (hpCode,hpName,hpCityCode) VALUES (1, 'Othello Castle', 1);''')
+connection.execute('''INSERT INTO HISTORICAL_PLACE (hpCode,hpName,hpCityCode) VALUES (2, 'St. Barnabas Monastery', 1);''')
+connection.execute('''INSERT INTO HISTORICAL_PLACE (hpCode,hpName,hpCityCode) VALUES (3, 'St. Hilarion Castle', 2);''')
+connection.execute('''INSERT INTO HISTORICAL_PLACE (hpCode,hpName,hpCityCode) VALUES (4, 'Bellapais Abbey', 2);''')
+connection.execute('''INSERT INTO HISTORICAL_PLACE (hpCode,hpName,hpCityCode) VALUES (5, 'Guzelyurt Museum', 3);''')
+connection.execute('''INSERT INTO HISTORICAL_PLACE (hpCode,hpName,hpCityCode) VALUES (6, 'St. Mamas Monastery', 3);''')
+connection.execute('''INSERT INTO HISTORICAL_PLACE (hpCode,hpName,hpCityCode) VALUES (7, 'Apostolos Andreas Monastery', 4);''')
+connection.execute('''INSERT INTO HISTORICAL_PLACE (hpCode,hpName,hpCityCode) VALUES (8, 'Kantara Castle', 4);''')
+connection.execute('''INSERT INTO HISTORICAL_PLACE (hpCode,hpName,hpCityCode) VALUES (9, 'Soli', 5);''')
+connection.execute('''INSERT INTO HISTORICAL_PLACE (hpCode,hpName,hpCityCode) VALUES (10, 'Vouni Palace', 5);''')
+connection.execute('''INSERT INTO HISTORICAL_PLACE (hpCode,hpName,hpCityCode) VALUES (11, 'St. Sophia Cathedral', 6);''')
+connection.execute('''INSERT INTO HISTORICAL_PLACE (hpCode,hpName,hpCityCode) VALUES (12, 'Dervis Pasa Mansion', 6);''')
+
+connection.execute('''INSERT INTO STAFF (staffID,username,password,roleID) VALUES (1, '1001HPM', '1234', 2);''')
+connection.execute('''INSERT INTO STAFF (staffID,username,password,roleID) VALUES (2, '1002HPM', '5678', 2);''')
+connection.execute('''INSERT INTO STAFF (staffID,username,password,roleID) VALUES (3, '1003HPM', '9123', 2);''')
+connection.execute('''INSERT INTO STAFF (staffID,username,password,roleID) VALUES (4, '1004HPM', '4567', 2);''')
+connection.execute('''INSERT INTO STAFF (staffID,username,password,roleID) VALUES (5, '1005HPM', '8912', 2);''')
+connection.execute('''INSERT INTO STAFF (staffID,username,password,roleID) VALUES (6, '1006HPM', '3456', 2);''')
+connection.execute('''INSERT INTO STAFF (staffID,username,password,roleID) VALUES (7, '1007HPM', '7891', 2);''')
+connection.execute('''INSERT INTO STAFF (staffID,username,password,roleID) VALUES (8, '1008HPM', '2345', 2);''')
+connection.execute('''INSERT INTO STAFF (staffID,username,password,roleID) VALUES (9, '1009HPM', '6789', 2);''')
+connection.execute('''INSERT INTO STAFF (staffID,username,password,roleID) VALUES (10, '10010HPM', '1234', 2);''')
+connection.execute('''INSERT INTO STAFF (staffID,username,password,roleID) VALUES (11, '10011HPM', '5678', 2);''')
+connection.execute('''INSERT INTO STAFF (staffID,username,password,roleID) VALUES (12, '10012HPM', '9123', 2);''')
+connection.execute('''INSERT INTO STAFF (staffID,username,password,roleID) VALUES (13, '10013A', '4567', 1);''')
+connection.execute('''INSERT INTO STAFF (staffID,username,password,roleID) VALUES (14, '10014A', '8912', 1);''')
+connection.execute('''INSERT INTO STAFF (staffID,username,password,roleID) VALUES (15, '10015A', '3456', 1);''')
 
 connection.commit()
 connection.close()
