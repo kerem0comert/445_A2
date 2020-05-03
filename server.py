@@ -28,6 +28,10 @@ class ServerThread(threading.Thread):
         authResult = "2".encode() #bad practice to send plain int's without header to client
         self.connection.send(authResult)
         print("auth result sent.")
+        clientQueryResponse = clientResponse = self.connection.recv(1024).decode()
+        print(clientQueryResponse)
+        queryResult = "QUERY INSERTION SUCCESSS".encode()
+        self.connection.send(queryResult)
         
 
 
