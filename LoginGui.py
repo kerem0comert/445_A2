@@ -5,7 +5,6 @@ import tkinter.messagebox as mb
 
 class LoginGui():
     def __init__(self, root, qMessage):
-        self.root = root
         self.qMessage = qMessage #the message queue to talk to the network thread
 
         self.labelUsername = tk.Label(root, text="Username: ").grid(row=0,column=0)
@@ -34,5 +33,4 @@ class LoginGui():
         else: 
             messageToServer = "auth" + ";" + username + ";" + password
             print("onclick: ", messageToServer)
-            self.root.destroy()
             if not self.qMessage.full(): self.qMessage.put(messageToServer) #send the login data to network thread

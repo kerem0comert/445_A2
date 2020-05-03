@@ -51,7 +51,7 @@ class AdminGui():
         if(selection == 0): 
             mb.showerror("Error", "Please select one of the options!")
             return
-        messageToServer = "qry" + ";" + str(selection) #QUERY AND QUERY NUMBER message
+        messageToServer = "adminQuery" + ";" + str(selection) #QUERY AND QUERY NUMBER message
         print("onclick: ", messageToServer)
         #root.destroy()
 
