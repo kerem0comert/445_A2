@@ -20,12 +20,6 @@ connection.execute('''CREATE TABLE CITY
 connection.execute('''CREATE TABLE ROLES
                       (roleID INT PRIMARY KEY,
                        roleName TEXT NOT NULL
-                      );''')                      
-connection.execute('''CREATE TABLE HISTORICAL_PLACE
-                      (hpCode INT PRIMARY KEY,
-                       hpName TEXT NOT NULL,
-                       hpCityCode INT NOT NULL,
-                       FOREIGN KEY(hpCityCode) REFERENCES CITY(cityCode)
                       );''')
 connection.execute('''CREATE TABLE STAFF
                       (staffID INT PRIMARY KEY,
@@ -34,11 +28,13 @@ connection.execute('''CREATE TABLE STAFF
                        roleID INT NOT NULL,
                        FOREIGN KEY (roleID) REFERENCES ROLES(roleID) ON UPDATE CASCADE
                       );''')
-connection.execute('''CREATE TABLE HISTORICAL_PLACE_MANAGERS
-                      (staffID INT PRIMARY KEY,
-                       hpCode TEXT NOT NULL UNIQUE,
-                       FOREIGN KEY (staffID) REFERENCES STAFF(staffID) ON DELETE CASCADE
-                       FOREIGN KEY (hpCode) REFERENCES HISTORICAL_PLACE(hpCode) ON DELETE CASCADE
+connection.execute('''CREATE TABLE HISTORICAL_PLACE
+                      (hpCode INT PRIMARY KEY,
+                       hpName TEXT NOT NULL,
+                       hpCityCode INT NOT NULL,
+                       hpManagerID INT NOT NULL UNIQUE,
+                       FOREIGN KEY(hpCityCode) REFERENCES CITY(cityCode)
+                       FOREIGN KEY(hpManagerID) REFERENCES STAFF(staffID)
                       );''')
 connection.execute('''CREATE TABLE VISITOR
                       (ID INT PRIMARY KEY,
@@ -62,19 +58,6 @@ connection.execute('''INSERT INTO CITY (cityCode,cityName) VALUES (6, 'Lefkosa')
 connection.execute('''INSERT INTO ROLES (roleID,roleName) VALUES (1, 'Administrator');''')
 connection.execute('''INSERT INTO ROLES (roleID,roleName) VALUES (2, 'Historical Place Manager');''')
 
-connection.execute('''INSERT INTO HISTORICAL_PLACE (hpCode,hpName,hpCityCode) VALUES (1, 'Othello Castle', 1);''')
-connection.execute('''INSERT INTO HISTORICAL_PLACE (hpCode,hpName,hpCityCode) VALUES (2, 'St. Barnabas Monastery', 1);''')
-connection.execute('''INSERT INTO HISTORICAL_PLACE (hpCode,hpName,hpCityCode) VALUES (3, 'St. Hilarion Castle', 2);''')
-connection.execute('''INSERT INTO HISTORICAL_PLACE (hpCode,hpName,hpCityCode) VALUES (4, 'Bellapais Abbey', 2);''')
-connection.execute('''INSERT INTO HISTORICAL_PLACE (hpCode,hpName,hpCityCode) VALUES (5, 'Guzelyurt Museum', 3);''')
-connection.execute('''INSERT INTO HISTORICAL_PLACE (hpCode,hpName,hpCityCode) VALUES (6, 'St. Mamas Monastery', 3);''')
-connection.execute('''INSERT INTO HISTORICAL_PLACE (hpCode,hpName,hpCityCode) VALUES (7, 'Apostolos Andreas Monastery', 4);''')
-connection.execute('''INSERT INTO HISTORICAL_PLACE (hpCode,hpName,hpCityCode) VALUES (8, 'Kantara Castle', 4);''')
-connection.execute('''INSERT INTO HISTORICAL_PLACE (hpCode,hpName,hpCityCode) VALUES (9, 'Soli', 5);''')
-connection.execute('''INSERT INTO HISTORICAL_PLACE (hpCode,hpName,hpCityCode) VALUES (10, 'Vouni Palace', 5);''')
-connection.execute('''INSERT INTO HISTORICAL_PLACE (hpCode,hpName,hpCityCode) VALUES (11, 'St. Sophia Cathedral', 6);''')
-connection.execute('''INSERT INTO HISTORICAL_PLACE (hpCode,hpName,hpCityCode) VALUES (12, 'Dervis Pasa Mansion', 6);''')
-
 connection.execute('''INSERT INTO STAFF (staffID,username,password,roleID) VALUES (1, '1001HPM', '1234', 2);''')
 connection.execute('''INSERT INTO STAFF (staffID,username,password,roleID) VALUES (2, '1002HPM', '5678', 2);''')
 connection.execute('''INSERT INTO STAFF (staffID,username,password,roleID) VALUES (3, '1003HPM', '9123', 2);''')
@@ -90,6 +73,19 @@ connection.execute('''INSERT INTO STAFF (staffID,username,password,roleID) VALUE
 connection.execute('''INSERT INTO STAFF (staffID,username,password,roleID) VALUES (13, '10013A', '4567', 1);''')
 connection.execute('''INSERT INTO STAFF (staffID,username,password,roleID) VALUES (14, '10014A', '8912', 1);''')
 connection.execute('''INSERT INTO STAFF (staffID,username,password,roleID) VALUES (15, '10015A', '3456', 1);''')
+
+connection.execute('''INSERT INTO HISTORICAL_PLACE (hpCode,hpName,hpCityCode,hpManagerID) VALUES (1, 'Othello Castle', 1, 1);''')
+connection.execute('''INSERT INTO HISTORICAL_PLACE (hpCode,hpName,hpCityCode,hpManagerID) VALUES (2, 'St. Barnabas Monastery', 1, 2);''')
+connection.execute('''INSERT INTO HISTORICAL_PLACE (hpCode,hpName,hpCityCode,hpManagerID) VALUES (3, 'St. Hilarion Castle', 2, 3);''')
+connection.execute('''INSERT INTO HISTORICAL_PLACE (hpCode,hpName,hpCityCode,hpManagerID) VALUES (4, 'Bellapais Abbey', 2, 4);''')
+connection.execute('''INSERT INTO HISTORICAL_PLACE (hpCode,hpName,hpCityCode,hpManagerID) VALUES (5, 'Guzelyurt Museum', 3, 5);''')
+connection.execute('''INSERT INTO HISTORICAL_PLACE (hpCode,hpName,hpCityCode,hpManagerID) VALUES (6, 'St. Mamas Monastery', 3, 6);''')
+connection.execute('''INSERT INTO HISTORICAL_PLACE (hpCode,hpName,hpCityCode,hpManagerID) VALUES (7, 'Apostolos Andreas Monastery', 4, 7);''')
+connection.execute('''INSERT INTO HISTORICAL_PLACE (hpCode,hpName,hpCityCode,hpManagerID) VALUES (8, 'Kantara Castle', 4, 8);''')
+connection.execute('''INSERT INTO HISTORICAL_PLACE (hpCode,hpName,hpCityCode,hpManagerID) VALUES (9, 'Soli', 5, 9);''')
+connection.execute('''INSERT INTO HISTORICAL_PLACE (hpCode,hpName,hpCityCode,hpManagerID) VALUES (10, 'Vouni Palace', 5, 10);''')
+connection.execute('''INSERT INTO HISTORICAL_PLACE (hpCode,hpName,hpCityCode,hpManagerID) VALUES (11, 'St. Sophia Cathedral', 6, 11);''')
+connection.execute('''INSERT INTO HISTORICAL_PLACE (hpCode,hpName,hpCityCode,hpManagerID) VALUES (12, 'Dervis Pasa Mansion', 6, 12);''')
 
 connection.commit()
 connection.close()
