@@ -6,8 +6,8 @@ import os
 import queue #used to pass the username-password data to ClientNetworkThread
 from time import sleep
 from LoginGui import *
-from managerGui import *
-from adminGui import *
+from ManagerGui import *
+from AdminGui import *
 
 qMessage = queue.Queue(1) #only the login data is there for the networkThread to consume, aso queue capacity = 1
 MANAGER_SUCCESS = "success"
