@@ -47,14 +47,11 @@ class AdminGui():
     def createQuery(self):
         selection = self.v.get()
         if(selection == 0): 
+            self.root = tk.Tk()
+            self.root.withdraw()
             mb.showerror("Error", "Please select one of the options!")
+            self.root.destroy()
             return
         messageToServer = "adminQuery" + ";" + str(selection) #QUERY AND QUERY NUMBER message
         print("onclick: ", messageToServer)
         #root.destroy()
-
-if __name__ == '__main__':  # this is to test the gui
-    root = tk.Tk()
-    root.geometry('500x300')
-    application = AdminGui(root)
-    root.mainloop()

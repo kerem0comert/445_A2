@@ -25,7 +25,7 @@ class ServerThread(threading.Thread):
         #check the roles!
         #if manager login success -> send 2, if admin login success -> send 1
         #  if login fail -> send 0
-        authResult = "1".encode() #bad practice to send plain int's without header to client
+        authResult = "2".encode() #bad practice to send plain int's without header to client
         self.connection.send(authResult)
         print(self.address, ": auth result sent.")
         clientQueryResponse = clientResponse = self.connection.recv(1024).decode()

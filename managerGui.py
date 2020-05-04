@@ -33,20 +33,62 @@ class ManagerGui():
 
 
     def reportData(self):
-        totVisitors = self.entryTotVisitors.get()
-        maleVisitors = self.entryMaleVisitors.get() 
-        femaleVisitors = self.entryFemaleVisitors.get() 
-        localVisitors = self.entryLocalVisitors.get() 
-        tourists = self.entryTourists.get() 
-        if (not totVisitors or not maleVisitors or not femaleVisitors or 
-            not localVisitors or not tourists):
-            # create another Tk root just for preventing create second empty window when info mb displayed
-            self.root = tk.Tk()
-            self.root.withdraw()
-            mb.showerror("Error", "Everything has to be filled out!")
-            self.root.destroy()
-        else: 
-            messageToServer = "insertDetails" + ";" + totVisitors + ";" + maleVisitors + ";" + femaleVisitors + ";" + localVisitors + ";" + tourists #record message
-            print("onclick: ", messageToServer)
-            self.qMessage.put(messageToServer)
+        try:
+            #inputs must be integers, if not integers then gives error
+            totVisitors = int(self.entryTotVisitors.get())
+            maleVisitors = int(self.entryMaleVisitors.get()) 
+            femaleVisitors = int(self.entryFemaleVisitors.get()) 
+            localVisitors = int(self.entryLocalVisitors.get()) 
+            tourists = int(self.entryTourists.get()) 
+            #totalvisitorsmust be equal to other visitors summed up
+            if (totVisitors != maleVisitors + femaleVisitors + localVisitors + tourists):
+                self.root = tk.Tk()
+                self.root.withdraw()
+                mb.showerror("Error", "Total Visitor must be equal to other fields summed up!")
+                self.root.destroy()
+            #every value has to be positive
+            elif (totVisitors<0 or maleVisitors<0 or femaleVisitors<0 or localVisitors<0 or tourists<0):
+                self.root = tk.Tk()
+                self.root.withdraw()
+                mb.showerror("Error", "No field can be NEGATIVE!")
+                self.root.destroy()
+            #if no error then send message to server
+            else:
+                messageToServer = "insertDetails" + ";" + str(totVisitors) + ";" + str(maleVisitors) + ";" + str(femaleVisitors) + ";" + str(localVisitors) + ";" + str(tourists) #record message
+                print("onclick: ", messageToServer)
+                self.qMessage.put(messageToServer)
+        except ValueError:
+            try:
+                #check float error
+                totVisitors = float(self.entryTotVisitors.get())
+                maleVisitors = float(self.entryMaleVisitors.get())
+                femaleVisitors = float(self.entryFemaleVisitors.get())
+                localVisitors = float(self.entryLocalVisitors.get())
+                tourists = float(self.entryTourists.get())
+                self.root = tk.Tk()
+                self.root.withdraw()
+                mb.showerror("Error", "Please Do NOT Enter Floats!, Integers Only!")
+                self.root.destroy()
+            except ValueError:
+                #check string error
+                totVisitors = self.entryTotVisitors.get()
+                maleVisitors = self.entryMaleVisitors.get()
+                femaleVisitors = self.entryFemaleVisitors.get()
+                localVisitors = self.entryLocalVisitors.get()
+                tourists = self.entryTourists.get()
+                #check empty field error, if any of the fields is empty give error
+                if (not str(totVisitors) or not str(maleVisitors) or not str(femaleVisitors) or 
+                not str(localVisitors) or not str(tourists)):             
+                # create another Tk root just for preventing create second empty window when info mb displayed
+                    self.root = tk.Tk()
+                    self.root.withdraw()
+                    mb.showerror("Error", "Everything has to be filled out!")
+                    self.root.destroy()
+                #if no fields are empty give inputted a string error
+                else:
+                    self.root = tk.Tk()
+                    self.root.withdraw()
+                    mb.showerror("Error", "You Entered A String!, Integers ONLY!")
+                    self.root.destroy()
+            
 
