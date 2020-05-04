@@ -4,11 +4,12 @@ import tkinter.messagebox as mb
 #from DBMS_Project import *
 
 class ManagerGui():
-    
-    messageToServer=''
-    def __init__(self,root, qMessage):
-        root.title('MANAGER SCREEN')
+    def __init__(self, root, qMessage, hpManagerID, hpCode):
+        root.title('Manager')
         self.qMessage = qMessage
+        self.hpManagerID = hpManagerID
+        self.hpCode = hpCode
+
         tk.Label(root, text = ' Total Number Of Visitors ',font='Times 15').grid(row=1,column=1,pady=20)
         self.entryTotVisitors = tk.Entry(root)
         self.entryTotVisitors.grid(row=1,column=2,columnspan=10)
@@ -41,7 +42,7 @@ class ManagerGui():
             localVisitors = int(self.entryLocalVisitors.get()) 
             tourists = int(self.entryTourists.get()) 
             #totalvisitorsmust be equal to other visitors summed up
-            if (totVisitors != maleVisitors + femaleVisitors + localVisitors + tourists):
+            if ((totVisitors != maleVisitors + femaleVisitors) or (totVisitors != localVisitors + tourists)):
                 self.root = tk.Tk()
                 self.root.withdraw()
                 mb.showerror("Error", "Total Visitor must be equal to other fields summed up!")
@@ -54,7 +55,7 @@ class ManagerGui():
                 self.root.destroy()
             #if no error then send message to server
             else:
-                messageToServer = "insertDetails" + ";" + str(totVisitors) + ";" + str(maleVisitors) + ";" + str(femaleVisitors) + ";" + str(localVisitors) + ";" + str(tourists) #record message
+                messageToServer = "insertDetails" + ";" + str(totVisitors) + ";" + str(maleVisitors) + ";" + str(femaleVisitors) + ";" + str(localVisitors) + ";" + str(tourists) + ";" + self.hpCode #record message
                 print("onclick: ", messageToServer)
                 self.qMessage.put(messageToServer)
         except ValueError:

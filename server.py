@@ -1,7 +1,7 @@
 import sqlite3
 import socket
 import threading
-
+from Database import *
 
 class ServerThread(threading.Thread):
     def __init__(self, connection, address):
@@ -20,23 +20,24 @@ class ServerThread(threading.Thread):
         responseArray = clientResponse.split(";") #responseArray = [authHeader, username, password]
         username = responseArray[1]
         password = responseArray[2]
-        #here username and password has to be checked in the database
-        #authResult will send success or fail accordingly back to client
-        #check the roles!
-        #if manager login success -> send 2, if admin login success -> send 1
-        #  if login fail -> send 0
-        authResult = "2".encode() #bad practice to send plain int's without header to client
-        self.connection.send(authResult)
-        print(self.address, ": auth result sent.")
-        clientQueryResponse = clientResponse = self.connection.recv(1024).decode()
-        if not clientQueryResponse:
+        loginResult = DB.login(username, password)
+        self.connection.send((str(loginResult[0]) + ";" + str(loginResult[1]) + ";" + str(DB.getHpCode(loginResult[0]))).encode())
+        print(self.address, ": login result sent.")
+        clientResponse = self.connection.recv(1024).decode()
+        if not clientResponse:
             print(self.address, ": Connection Closed!")
             quit()
-        print(self.address, ": clientQueryResponse :", clientQueryResponse)
-        queryResult = "QUERY INSERTION SUCCESSS".encode()
-        self.connection.send(queryResult)
+        print(self.address, ": clientResponse :", clientResponse)
+        clientQueryResponse = clientResponse.split(";")
+        if clientQueryResponse[0] == "insertDetails":
+            del clientQueryResponse[0]
+            # clientQueryResponse -> [totVisitors, maleVisitors, femaleVisitors, localVisitors, tourists, hpCode]
+            if DB.sendStatistics(clientQueryResponse):
+                queryResult = "QUERY INSERTION FAILED".encode()
+            else:
+                queryResult = "QUERY INSERTION SUCCESSS".encode()
+            self.connection.send(queryResult)
         print(self.address, ": Finished!")
-        quit()
 
 HOST = 'localhost'
 PORT = 5000
@@ -54,10 +55,13 @@ except Exception as e:
     print("BYE!")
     quit()
 
+DB = Database()
+
 print("Listening on", serverSocket.getsockname())
 #auth -> [header, username, password]
 #adminQuery -> [header, selection]
-#insertDetails -> [header, totVisitors, maleVisitors, femalVisitors, localVisitors, tourists]
+#insertDetails -> [header, totVisitors, maleVisitors, femalVisitors,
+#localVisitors, tourists]
 while 1:
     serverSocket.listen()
     connection, address = serverSocket.accept()

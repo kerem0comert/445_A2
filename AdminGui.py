@@ -6,7 +6,7 @@ import tkinter.messagebox as mb
 class AdminGui():
     
     def __init__(self,root,qMessage):
-        root.title('ADMIN SCREEN')
+        root.title('Admin')
         self.v = tk.IntVar()
         
         self.rbMaxPlace = tk.Radiobutton(root, value = 1, 

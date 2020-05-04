@@ -7,6 +7,7 @@ class LoginGui():
     def __init__(self, root, qMessage):
         self.qMessage = qMessage #the message queue to talk to the network thread
 
+        root.title('Login')
         self.labelUsername = tk.Label(root, text="Username: ").grid(row=0,column=0)
         self.labelPassword = tk.Label(root, text= "Password: ").grid(row=1,column=0)
         self.entryUsername = tk.Entry(root, width=20)

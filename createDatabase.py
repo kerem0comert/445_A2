@@ -37,13 +37,13 @@ connection.execute('''CREATE TABLE HISTORICAL_PLACE
                        FOREIGN KEY(hpManagerID) REFERENCES STAFF(staffID)
                       );''')
 connection.execute('''CREATE TABLE VISITOR
-                      (ID INT PRIMARY KEY,
-                       date TIMESTAMP NOT NULL,
+                       (date DATE,
                        numOfTourists INT NOT NULL,
                        numOfLocalVisitors INT NOT NULL,
                        numOfMaleVisitors INT NOT NULL,
                        numOfFemaleVisitors INT NOT NULL,
-                       hpCode INT NOT NULL,
+                       hpCode INT,
+                       PRIMARY KEY (date, hpCode),
                        FOREIGN KEY (hpCode) REFERENCES HISTORICAL_PLACE(hpCode) ON UPDATE CASCADE
                       );''')
 
