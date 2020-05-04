@@ -54,11 +54,11 @@ except Exception as e:
     print("BYE!")
     quit()
 
+print("Listening on", serverSocket.getsockname())
 #auth -> [header, username, password]
 #adminQuery -> [header, selection]
 #insertDetails -> [header, totVisitors, maleVisitors, femalVisitors, localVisitors, tourists]
 while 1:
-    print("Waiting for connection...")
     serverSocket.listen()
     connection, address = serverSocket.accept()
     ServerThread(connection, address).start()
