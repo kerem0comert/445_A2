@@ -6,7 +6,8 @@ import os
 import queue #used to pass the username-password data to ClientNetworkThread
 from time import sleep
 from LoginGui import *
-from ManagerGui import *
+from managerGui import *
+from adminGui import *
 
 qMessage = queue.Queue(1) #only the login data is there for the networkThread to consume, aso queue capacity = 1
 MANAGER_SUCCESS = "success"
@@ -64,6 +65,14 @@ class ClientNetworkThread(threading.Thread):
                         elif int(serverAuthResponse) == 1:
                             mb.showinfo("Login", "Logged in successfully!")
                             qMessage.put(ADMIN_SUCCESS)
+                            self.root.destroy()
+                            sleep(2) #wait until gui thread can take the queue message
+                            while qMessage.empty(): sleep(1)
+                            queryToServer = qMessage.get().encode()
+                            mySocket.send(queryToServer)
+                            serverQueryResponse = mySocket.recv(1024).decode()
+                            # ADD QUERY SELECTIONS HERE !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+                            end_app()
                     except Exception as e: print(e)
         except: 
             mb.showerror("Error", "Connection to server failed or closed.")
@@ -98,5 +107,12 @@ if __name__ == '__main__':
         print("Main Thread:", threading.get_ident())
         managerGui = ManagerGui(managerGuiRoot, qMessage)
         managerGuiRoot.mainloop()
-    elif(loginStatus == ADMIN_SUCCESS): pass
+    elif(loginStatus == ADMIN_SUCCESS): 
+        AdminGuiRoot = tk.Tk()
+        AdminGuiRoot.geometry('450x300')
+        AdminGuiRoot.protocol("WM_DELETE_WINDOW", end_app)
+        AdminGuiRoot.resizable(False, False)
+        print("Main Thread:", threading.get_ident())
+        adminGui = AdminGui(AdminGuiRoot, qMessage)
+        AdminGuiRoot.mainloop()
     else: print("Program terminated, login failed.")

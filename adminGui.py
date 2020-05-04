@@ -5,9 +5,8 @@ import tkinter.messagebox as mb
 
 class AdminGui():
     
-    def __init__(self,root):
-        self.root = tk.Tk()
-        self.root.title('ADMIN SCREEN')
+    def __init__(self,root,qMessage):
+        root.title('ADMIN SCREEN')
         self.v = tk.IntVar()
         
         self.rbMaxPlace = tk.Radiobutton(root, value = 1, 
@@ -42,7 +41,7 @@ class AdminGui():
         self.rbDetailedPlace.pack()
         self.radioButton5.pack()
     
-        tk.Button(text='CREATE REPORT',command= self.createQuery).pack()
+        tk.Button(root, text='CREATE REPORT',command= self.createQuery).pack()
         print(self.v)
 
     def createQuery(self):
