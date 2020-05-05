@@ -4,6 +4,21 @@ import threading
 from time import sleep
 from Database import *
 
+class Encode():
+    @staticmethod
+    def encodeCityList(theList):
+        stringBuilder = ""
+        for theTuple in theList:
+            stringBuilder += str(theTuple[0]) + "," + theTuple[1] + ";"
+        return stringBuilder.encode()
+
+    @staticmethod
+    def encodeHpList(theList):
+        stringBuilder = ""
+        for theTuple in theList:
+            stringBuilder += str(theTuple[0]) + "," + str(theTuple[1]) + "," + theTuple[2] + ";"
+        return stringBuilder.encode()
+
 class ServerThread(threading.Thread):
     def __init__(self, connection, address):
         self.connection = connection
@@ -27,7 +42,9 @@ class ServerThread(threading.Thread):
         if loginResult[1] == 2:
             self.connection.send((str(DB.getHpCode(loginResult[0])) + ";" + DB.getHpName(DB.getHpCode(loginResult[0])) + ";" + DB.getHpCityName(loginResult[0])).encode())
         elif loginResult[1] == 1:
-            pass
+            self.connection.send(Encode.encodeCityList(DB.getCities()))
+            sleep(0.5)
+            self.connection.send(Encode.encodeHpList(DB.getHistoricalPlaces()))
         print(self.address, ": login result sent.")
         clientResponse = self.connection.recv(1024).decode()
         if not clientResponse:

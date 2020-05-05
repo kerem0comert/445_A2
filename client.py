@@ -16,6 +16,31 @@ MANAGER_GUI_READY = "managerGuiReady"
 MANAGER_QUERY_SUCCESS = "QUERY INSERTION SUCCESSS"
 MANAGER_QUERY_FAIL = "QUERY INSERTION FAILED"
 
+class Decode():
+    @staticmethod
+    def decodeCities(cities):
+        dict = {}
+        citiesList = cities.split(";")
+        citiesList.pop() # last is empty, remove it
+        for theEntry in citiesList:
+            cityInfo = theEntry.split(",")
+            dict[cityInfo[0]] = cityInfo[1]
+        return dict
+
+    @staticmethod
+    def decodeHistoricalPlaces(hp):
+        dict = {}
+        hpList = hp.split(";")
+        hpList.pop() # last is empty, remove it
+        for theEntry in hpList:
+            hpInfo = theEntry.split(",")
+            if not dict.get(int(hpInfo[0])):
+                dict[int(hpInfo[0])] = [[int(hpInfo[1]), hpInfo[2]]]
+            else:
+                dict[int(hpInfo[0])].append([int(hpInfo[1]), hpInfo[2]])
+        return dict
+
+
 class ClientNetworkThread(threading.Thread):
     def __init__(self, root):
         self.root = root
@@ -29,71 +54,72 @@ class ClientNetworkThread(threading.Thread):
         mySocket = socket.socket(socket.AF_INET, #for ipv4 communiciation
                                 socket.SOCK_STREAM # TCP Protocol
                                 )
+
         try:
             mySocket.connect((HOST,PORT))
-            print("Connected to server.")
-            managerLoginGui.labelConnection.config(text='Connected to server')
-            managerLoginGui.buttonLogin.config(state="normal")
-            serverResponse = mySocket.recv(1024).decode()
-            print(serverResponse)
-            if serverResponse == "waiting for auth": #server is waiting for login data
-                while qMessage.empty(): sleep(1)
-                if not qMessage.empty(): #login data came from the gui
-                    guiResponse = qMessage.get()
-                    guiResponseList = guiResponse.split(";")
-                    global username
-                    username = guiResponseList[1]
-                    messageToServer = guiResponse.encode()
-                    try: 
-                        mySocket.send(messageToServer)
-                        # serverLoginResponse -> staffID;authResponse;roleID
-                        serverLoginResponse = mySocket.recv(1024).decode().split(";")
-                        serverAuthResponse = serverLoginResponse[1]
-                        print("Server auth response: ", serverAuthResponse)
-                        if int(serverAuthResponse) == 0: 
-                            mb.showerror("Error", "Login failed")
-                            end_app()
-                        elif int(serverAuthResponse) == 2:
-                            mb.showinfo("Login", "Logged in successfully!")
-                            managerData = mySocket.recv(1024).decode().split(";")
-                            qMessage.put(MANAGER_SUCCESS)
-                            qMessage.put(serverLoginResponse[0]) # staffID
-                            qMessage.put(managerData[0]) # hpCode
-                            qMessage.put(managerData[1]) # hpName
-                            qMessage.put(managerData[2]) # hpCityName
-                            self.root.destroy()
-                            sleep(2) #wait until gui thread can take the queue message
-                            while qMessage.empty(): sleep(1)
-                            queryToServer = qMessage.get().encode()
-                            mySocket.send(queryToServer)
-                            serverQueryResponse = mySocket.recv(1024).decode()
-                            # create another Tk root just for preventing create second empty window when info mb displayed
-                            self.root = tk.Tk()
-                            self.root.withdraw()
-                            if serverQueryResponse == MANAGER_QUERY_SUCCESS:
-                                mb.showinfo("Success", "Insertion successful")
-                            else:
-                                mb.showerror("Error", "You cant send statistics more than once in a day")
-                            self.root.destroy()
-                            # kill proccess here, we dont have anything to do left
-                            end_app()
-                        elif int(serverAuthResponse) == 1:
-                            mb.showinfo("Login", "Logged in successfully!")
-                            self.root.destroy()
-                            qMessage.put(ADMIN_SUCCESS)
-                            qMessage.put(serverLoginResponse[0]) # staffID
-
-                            sleep(2) #wait until gui thread can take the queue message
-                            while qMessage.empty(): sleep(1)
-                            queryToServer = qMessage.get().encode()
-                            mySocket.send(queryToServer)
-                            serverQueryResponse = mySocket.recv(1024).decode()
-                            # ADD QUERY SELECTIONS HERE !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-                            end_app()
-                    except: pass
         except: 
             mb.showerror("Error", "Connection to server failed or closed.")
             end_app()
+        print("Connected to server.")
+        managerLoginGui.labelConnection.config(text='Connected to server')
+        managerLoginGui.buttonLogin.config(state="normal")
+        serverResponse = mySocket.recv(1024).decode()
+        print(serverResponse)
+        if serverResponse == "waiting for auth": #server is waiting for login data
+            while qMessage.empty(): sleep(1)
+            if not qMessage.empty(): #login data came from the gui
+                guiResponse = qMessage.get()
+                guiResponseList = guiResponse.split(";")
+                global username
+                username = guiResponseList[1]
+                messageToServer = guiResponse.encode()
+                mySocket.send(messageToServer)
+                # serverLoginResponse -> staffID;authResponse;roleID
+                serverLoginResponse = mySocket.recv(1024).decode().split(";")
+                serverAuthResponse = serverLoginResponse[1]
+                print("Server auth response: ", serverAuthResponse)
+                if int(serverAuthResponse) == 0: 
+                    mb.showerror("Error", "Login failed")
+                    end_app()
+                elif int(serverAuthResponse) == 2:
+                    mb.showinfo("Login", "Logged in successfully!")
+                    managerData = mySocket.recv(1024).decode().split(";")
+                    qMessage.put(MANAGER_SUCCESS)
+                    qMessage.put(serverLoginResponse[0]) # staffID
+                    qMessage.put(managerData[0]) # hpCode
+                    qMessage.put(managerData[1]) # hpName
+                    qMessage.put(managerData[2]) # hpCityName
+                    self.root.destroy()
+                    sleep(2) #wait until gui thread can take the queue message
+                    while qMessage.empty(): sleep(1)
+                    queryToServer = qMessage.get().encode()
+                    mySocket.send(queryToServer)
+                    serverQueryResponse = mySocket.recv(1024).decode()
+                    # create another Tk root just for preventing create second empty window when info mb displayed
+                    self.root = tk.Tk()
+                    self.root.withdraw()
+                    if serverQueryResponse == MANAGER_QUERY_SUCCESS:
+                        mb.showinfo("Success", "Insertion successful")
+                    else:
+                        mb.showerror("Error", "You cant send statistics more than once in a day")
+                    self.root.destroy()
+                    # kill proccess here, we dont have anything to do left
+                    end_app()
+                elif int(serverAuthResponse) == 1:
+                    qMessage.put(ADMIN_SUCCESS)
+                    qMessage.put(serverLoginResponse[0]) # staffID
+                    qMessage.put(Decode.decodeCities(mySocket.recv(1024).decode())) # cities
+                    qMessage.put(Decode.decodeHistoricalPlaces(mySocket.recv(1024).decode())) # historical places
+                    mb.showinfo("Login", "Logged in successfully!")
+                    self.root.destroy()
+                    sleep(2) #wait until gui thread can take the queue message
+                    while qMessage.empty(): sleep(1)
+                    queryToServer = qMessage.get().encode()
+                    mySocket.send(queryToServer)
+                    serverQueryResponse = mySocket.recv(1024).decode()
+                    # ADD QUERY SELECTIONS HERE !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+                    end_app()
+        
 
 def end_app():
     try:
@@ -127,7 +153,9 @@ if __name__ == '__main__':
         print("Main Thread:", threading.get_ident())
         managerGui = ManagerGui(managerGuiRoot, qMessage, staffID, hpCode, hpName, hpCityName, username)
         managerGuiRoot.mainloop()
-    elif(loginStatus == ADMIN_SUCCESS): 
+    elif(loginStatus == ADMIN_SUCCESS):
+        cities = qMessage.get()
+        hp = qMessage.get()
         AdminGuiRoot = tk.Tk()
         AdminGuiRoot.geometry('450x300')
         AdminGuiRoot.protocol("WM_DELETE_WINDOW", end_app)

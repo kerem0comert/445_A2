@@ -11,7 +11,6 @@ class Database():
         dbCursor = self.db.cursor()
         dbCursor.execute("SELECT staffID,roleID FROM STAFF WHERE username = ? AND password = ?", (username,password,))
         queryResult = dbCursor.fetchall()
-        print("DB: ", queryResult)
         dbCursor.close()
         try:
             queryTuple = queryResult[0]
@@ -47,6 +46,20 @@ class Database():
             queryTuple = queryResult[0]
             return queryTuple[0]
         except: return "None"
+
+    def getCities(self):
+        dbCursor = self.db.cursor()
+        dbCursor.execute("SELECT cityCode,cityName FROM CITY")
+        queryResult = dbCursor.fetchall()
+        dbCursor.close()
+        return queryResult
+
+    def getHistoricalPlaces(self):
+        dbCursor = self.db.cursor()
+        dbCursor.execute("SELECT hpCityCode,hpCode,hpName FROM HISTORICAL_PLACE")
+        queryResult = dbCursor.fetchall()
+        dbCursor.close()
+        return queryResult
 
     def sendStatistics(self, reportDetails):
         # reportDetails -> [totVisitors, maleVisitors, femaleVisitors, localVisitors, tourists, hpCode]
