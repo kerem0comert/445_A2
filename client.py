@@ -25,7 +25,7 @@ class Decode():
         citiesList.pop() # last is empty, remove it
         for theEntry in citiesList:
             cityInfo = theEntry.split(",")
-            dict[cityInfo[0]] = cityInfo[1]
+            dict[cityInfo[1]] = int(cityInfo[0])
         return dict
 
     @staticmethod
@@ -36,9 +36,9 @@ class Decode():
         for theEntry in hpList:
             hpInfo = theEntry.split(",")
             if not dict.get(int(hpInfo[0])):
-                dict[int(hpInfo[0])] = [[int(hpInfo[1]), hpInfo[2]]]
+                dict[int(hpInfo[0])] = {hpInfo[2]: int(hpInfo[1])}
             else:
-                dict[int(hpInfo[0])].append([int(hpInfo[1]), hpInfo[2]])
+                dict[int(hpInfo[0])].update({hpInfo[2]: int(hpInfo[1])})
         return dict
 
 
@@ -162,18 +162,6 @@ if __name__ == '__main__':
         AdminGuiRoot.protocol("WM_DELETE_WINDOW", end_app)
         AdminGuiRoot.resizable(False, False)
         print("Main Thread:", threading.get_ident())
-        adminGui = AdminGui(AdminGuiRoot, qMessage)
+        adminGui = AdminGui(AdminGuiRoot, qMessage, cities, hp)
         AdminGuiRoot.mainloop()
-        #result returned from adminGui
-        result='test place'
-        resultList=['Othello Castle\nV=0,M=0,F=0','Soykan Castle\nV=0,M0,F=0']
-        if(result[0]='1'):
-            mb.showinfo("Historical place with the most number of visitors is \n",result) 
-        elif(result[0]='2'):
-            mb.showinfo("City with the most number of visitors is \n",result)
-        elif(result[0]='3'):
-            mb.showinfo(resultList,"\n\nV=The Number Of Visitors\nM=The Number Of Male Visitors\nF=The Number Of Female Visitors\nL=The Number Of Local Visitors\nT=The Number Of Tourists")
-        elif(result[0]='4'):
-            mb.showinfo(resultList,"\n\nV=The Number Of Visitors\nM=The Number Of Male Visitors\nF=The Number Of Female Visitors\nL=The Number Of Local Visitors\nT=The Number Of Tourists")
-        elif(result[0]='5'):
-            mb.showinfo(resultList,"\n\nV=The Number Of Visitors\nM=The Number Of Male Visitors\nF=The Number Of Female Visitors\nL=The Number Of Local Visitors\nT=The Number Of Tourists")
+        # NOTHING SHOULD BE ADDED HERE!!!
