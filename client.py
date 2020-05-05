@@ -127,7 +127,7 @@ if __name__ == '__main__':
         managerGuiRoot.mainloop()
     elif(loginStatus == ADMIN_SUCCESS): 
         AdminGuiRoot = tk.Tk()
-        AdminGuiRoot.geometry('450x300')
+        AdminGuiRoot.geometry('800x600')
         AdminGuiRoot.protocol("WM_DELETE_WINDOW", end_app)
         AdminGuiRoot.resizable(False, False)
         print("Main Thread:", threading.get_ident())
