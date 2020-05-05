@@ -69,7 +69,7 @@ class AdminGui():
     def inputDate(self,*args):
         self.dateTitle.pack(side=tk.TOP, ipady=5)
         self.dateEntry.pack(side=tk.TOP, ipady=5)
-        self.date = self.dateEntry.get()
+        
 
     def loadPlaces(self,*args):
         #take palces from the database
@@ -88,6 +88,7 @@ class AdminGui():
     def createQuery(self):
         selection = self.v.get()
         if(selection == 5):
+            self.date = self.dateEntry.get()
             messageToServer = "adminQuery" + ";" + str(selection) + ";" + self.defaultPlace.get() + ";" + self.date
             print("onclick: ", messageToServer)
         else:
