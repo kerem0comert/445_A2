@@ -46,7 +46,7 @@ class ClientNetworkThread(threading.Thread):
                     messageToServer = guiResponse.encode()
                     try: 
                         mySocket.send(messageToServer)
-                        # serverLoginResponse -> staffID;authResponse;roleID;hpCode;hpName;hpCityName
+                        # serverLoginResponse -> staffID;authResponse;roleID
                         serverLoginResponse = mySocket.recv(1024).decode().split(";")
                         serverAuthResponse = serverLoginResponse[1]
                         print("Server auth response: ", serverAuthResponse)
@@ -55,11 +55,12 @@ class ClientNetworkThread(threading.Thread):
                             end_app()
                         elif int(serverAuthResponse) == 2:
                             mb.showinfo("Login", "Logged in successfully!")
+                            managerData = mySocket.recv(1024).decode().split(";")
                             qMessage.put(MANAGER_SUCCESS)
                             qMessage.put(serverLoginResponse[0]) # staffID
-                            qMessage.put(serverLoginResponse[2]) # hpCode
-                            qMessage.put(serverLoginResponse[3]) # hpName
-                            qMessage.put(serverLoginResponse[4]) # hpCityName
+                            qMessage.put(managerData[0]) # hpCode
+                            qMessage.put(managerData[1]) # hpName
+                            qMessage.put(managerData[2]) # hpCityName
                             self.root.destroy()
                             sleep(2) #wait until gui thread can take the queue message
                             while qMessage.empty(): sleep(1)
@@ -78,9 +79,10 @@ class ClientNetworkThread(threading.Thread):
                             end_app()
                         elif int(serverAuthResponse) == 1:
                             mb.showinfo("Login", "Logged in successfully!")
+                            self.root.destroy()
                             qMessage.put(ADMIN_SUCCESS)
                             qMessage.put(serverLoginResponse[0]) # staffID
-                            self.root.destroy()
+
                             sleep(2) #wait until gui thread can take the queue message
                             while qMessage.empty(): sleep(1)
                             queryToServer = qMessage.get().encode()

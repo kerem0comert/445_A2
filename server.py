@@ -1,6 +1,7 @@
 import sqlite3
 import socket
 import threading
+from time import sleep
 from Database import *
 
 class ServerThread(threading.Thread):
@@ -21,7 +22,12 @@ class ServerThread(threading.Thread):
         username = responseArray[1]
         password = responseArray[2]
         loginResult = DB.login(username, password)
-        self.connection.send((str(loginResult[0]) + ";" + str(loginResult[1]) + ";" + str(DB.getHpCode(loginResult[0])) + ";" + DB.getHpName(DB.getHpCode(loginResult[0])) + ";" + DB.getHpCityName(loginResult[0])).encode())
+        self.connection.send((str(loginResult[0]) + ";" + str(loginResult[1])).encode())
+        sleep(0.5) # just in case
+        if loginResult[1] == 2:
+            self.connection.send((str(DB.getHpCode(loginResult[0])) + ";" + DB.getHpName(DB.getHpCode(loginResult[0])) + ";" + DB.getHpCityName(loginResult[0])).encode())
+        elif loginResult[1] == 1:
+            pass
         print(self.address, ": login result sent.")
         clientResponse = self.connection.recv(1024).decode()
         if not clientResponse:
