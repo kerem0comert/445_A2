@@ -70,9 +70,9 @@ connection.execute('''INSERT INTO STAFF (staffID,username,password,roleID) VALUE
 connection.execute('''INSERT INTO STAFF (staffID,username,password,roleID) VALUES (10, '10010HPM', '1234', 2);''')
 connection.execute('''INSERT INTO STAFF (staffID,username,password,roleID) VALUES (11, '10011HPM', '5678', 2);''')
 connection.execute('''INSERT INTO STAFF (staffID,username,password,roleID) VALUES (12, '10012HPM', '9123', 2);''')
-connection.execute('''INSERT INTO STAFF (staffID,username,password,roleID) VALUES (13, '10013A', '4567', 1);''')
-connection.execute('''INSERT INTO STAFF (staffID,username,password,roleID) VALUES (14, '10014A', '8912', 1);''')
-connection.execute('''INSERT INTO STAFF (staffID,username,password,roleID) VALUES (15, '10015A', '3456', 1);''')
+connection.execute('''INSERT INTO STAFF (staffID,username,password,roleID) VALUES (13, '1013A', '4567', 1);''')
+connection.execute('''INSERT INTO STAFF (staffID,username,password,roleID) VALUES (14, '1014A', '8912', 1);''')
+connection.execute('''INSERT INTO STAFF (staffID,username,password,roleID) VALUES (15, '1015A', '3456', 1);''')
 
 connection.execute('''INSERT INTO HISTORICAL_PLACE (hpCode,hpName,hpCityCode,hpManagerID) VALUES (1, 'Othello Castle', 1, 1);''')
 connection.execute('''INSERT INTO HISTORICAL_PLACE (hpCode,hpName,hpCityCode,hpManagerID) VALUES (2, 'St. Barnabas Monastery', 1, 2);''')

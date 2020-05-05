@@ -11,6 +11,7 @@ class Database():
         dbCursor = self.db.cursor()
         dbCursor.execute("SELECT staffID,roleID FROM STAFF WHERE username = ? AND password = ?", (username,password,))
         queryResult = dbCursor.fetchall()
+        print("DB: ", queryResult)
         dbCursor.close()
         try:
             queryTuple = queryResult[0]
