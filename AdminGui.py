@@ -50,7 +50,11 @@ class AdminGui():
             self.dropdownForFifthPlace.pack_forget()
             self.dropdownTitleCity.pack_forget()
             self.dropdownForFifthCity.pack_forget()
+            self.dateTitle.pack_forget()
+            self.dateEntry.pack_forget()
             self.extendedForThird.pack(side=tk.TOP, ipady=5)
+            self.dateTitle.pack(side=tk.TOP, ipady=5)
+            self.dateEntry.pack(side=tk.TOP, ipady=5)
         elif (selection == 4):
             self.extendedForThird.pack_forget()
             self.extendedForFifth.pack_forget()
@@ -58,10 +62,16 @@ class AdminGui():
             self.dropdownTitleCity.pack_forget()
             self.dropdownForFifthPlace.pack_forget()
             self.dropdownTitlePlace.pack_forget()
+            self.dateTitle.pack_forget()
+            self.dateEntry.pack_forget()
             self.extendedForFourth.pack(side=tk.TOP, ipady=5)
+            self.dateTitle.pack(side=tk.TOP, ipady=5)
+            self.dateEntry.pack(side=tk.TOP, ipady=5)
         elif (selection == 5):
             self.extendedForFourth.pack_forget()
             self.extendedForThird.pack_forget()
+            self.dateTitle.pack_forget()
+            self.dateEntry.pack_forget()
             self.extendedForFifth.pack(side=tk.TOP, ipady=5)
             self.dropdownTitlePlace.pack(side=tk.TOP, ipady=5)
             self.dropdownForFifthCity.pack(side=tk.TOP, ipady=5)
@@ -90,6 +100,10 @@ class AdminGui():
         if(selection == 5):
             self.date = self.dateEntry.get()
             messageToServer = "adminQuery" + ";" + str(selection) + ";" + self.defaultPlace.get() + ";" + self.date
+            print("onclick: ", messageToServer)
+        elif(selection ==3 or selection ==4):
+            self.date = self.dateEntry.get()
+            messageToServer = "adminQuery" + ";" + str(selection) + ";" + self.date
             print("onclick: ", messageToServer)
         else:
             print(selection)

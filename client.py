@@ -8,6 +8,7 @@ from time import sleep
 from LoginGui import *
 from ManagerGui import *
 from AdminGui import *
+from tkinter.messagebox import showinfo
 
 qMessage = queue.Queue(5)
 MANAGER_SUCCESS = "success"
@@ -133,3 +134,16 @@ if __name__ == '__main__':
         print("Main Thread:", threading.get_ident())
         adminGui = AdminGui(AdminGuiRoot, qMessage)
         AdminGuiRoot.mainloop()
+        #result returned from adminGui
+        result='test place'
+        resultList=['Othello Castle\nV=0,M=0,F=0','Soykan Castle\nV=0,M0,F=0']
+        if(result[0]='1'):
+            mb.showinfo("Historical place with the most number of visitors is \n",result) 
+        elif(result[0]='2'):
+            mb.showinfo("City with the most number of visitors is \n",result)
+        elif(result[0]='3'):
+            mb.showinfo(resultList,"\n\nV=The Number Of Visitors\nM=The Number Of Male Visitors\nF=The Number Of Female Visitors\nL=The Number Of Local Visitors\nT=The Number Of Tourists")
+        elif(result[0]='4'):
+            mb.showinfo(resultList,"\n\nV=The Number Of Visitors\nM=The Number Of Male Visitors\nF=The Number Of Female Visitors\nL=The Number Of Local Visitors\nT=The Number Of Tourists")
+        elif(result[0]='5'):
+            mb.showinfo(resultList,"\n\nV=The Number Of Visitors\nM=The Number Of Male Visitors\nF=The Number Of Female Visitors\nL=The Number Of Local Visitors\nT=The Number Of Tourists")
