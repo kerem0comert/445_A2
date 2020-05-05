@@ -4,33 +4,52 @@ import tkinter.messagebox as mb
 #from DBMS_Project import *
 
 class ManagerGui():
-    def __init__(self, root, qMessage, hpManagerID, hpCode):
+    def __init__(self, root, qMessage, hpManagerID, hpCode, hpName, hpCityName, username):
         root.title('Manager')
         self.qMessage = qMessage
         self.hpManagerID = hpManagerID
         self.hpCode = hpCode
+        self.hpName = hpName
+        self.username = username
+        self.hpCityName = hpCityName
 
-        tk.Label(root, text = ' Total Number Of Visitors ',font='Times 15').grid(row=1,column=1,pady=20)
+        rowCounter = 1
+
+        tk.Label(root, text = "Welcome back " + self.username + "!",font='Times 15').grid(row=rowCounter,column=1,pady=10)
+        rowCounter += 1
+
+        tk.Label(root, text = "Historical Place: " + self.hpName,font='Times 15').grid(row=rowCounter,column=1,pady=10)
+        rowCounter += 1
+
+        tk.Label(root, text = "City: " + self.hpCityName,font='Times 15').grid(row=rowCounter,column=1,pady=10)
+        rowCounter += 1
+
+        tk.Label(root, text = ' Total Number Of Visitors: ',font='Times 15').grid(row=rowCounter,column=1,pady=20)
         self.entryTotVisitors = tk.Entry(root)
-        self.entryTotVisitors.grid(row=1,column=2,columnspan=10)
+        self.entryTotVisitors.grid(row=rowCounter,column=2,columnspan=10)
+        rowCounter += 1
 
-        tk.Label(root, text = ' The Number Of Male Visitors ',font='Times 15').grid(row=2,column=1,pady=10)
+        tk.Label(root, text = ' The Number Of Male Visitors: ',font='Times 15').grid(row=rowCounter,column=1,pady=10)
         self.entryMaleVisitors = tk.Entry(root)
-        self.entryMaleVisitors.grid(row=2,column=2,columnspan=10)
+        self.entryMaleVisitors.grid(row=rowCounter,column=2,columnspan=10)
+        rowCounter += 1
 
-        tk.Label(root, text = ' The Number Of Female Visitors ',font='Times 15').grid(row=3,column=1,pady=10)
+        tk.Label(root, text = ' The Number Of Female Visitors: ',font='Times 15').grid(row=rowCounter,column=1,pady=10)
         self.entryFemaleVisitors = tk.Entry(root)
-        self.entryFemaleVisitors.grid(row=3,column=2,columnspan=10)
+        self.entryFemaleVisitors.grid(row=rowCounter,column=2,columnspan=10)
+        rowCounter += 1
 
-        tk.Label(root, text = ' The Number Of Local Visitors ',font='Times 15').grid(row=4,column=1,pady=10)
+        tk.Label(root, text = ' The Number Of Local Visitors: ',font='Times 15').grid(row=rowCounter,column=1,pady=10)
         self.entryLocalVisitors = tk.Entry(root)
-        self.entryLocalVisitors.grid(row=4,column=2,columnspan=10)
+        self.entryLocalVisitors.grid(row=rowCounter,column=2,columnspan=10)
+        rowCounter += 1
 
-        tk.Label(root, text = ' The Number Of Tourists ',font='Times 15').grid(row=5,column=1,pady=10)
+        tk.Label(root, text = ' The Number Of Tourists: ',font='Times 15').grid(row=rowCounter,column=1,pady=10)
         self.entryTourists = tk.Entry(root)
-        self.entryTourists.grid(row=5,column=2,columnspan=10)
+        self.entryTourists.grid(row=rowCounter,column=2,columnspan=10)
+        rowCounter += 1
 
-        tk.Button(root, text='REPORT',command=self.reportData).grid(row=6,column=2)
+        tk.Button(root, text='REPORT',command=self.reportData).grid(row=rowCounter,column=2)
 
 
     def reportData(self):

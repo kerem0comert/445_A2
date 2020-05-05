@@ -9,7 +9,7 @@ from LoginGui import *
 from ManagerGui import *
 from AdminGui import *
 
-qMessage = queue.Queue(3)
+qMessage = queue.Queue(5)
 MANAGER_SUCCESS = "success"
 ADMIN_SUCCESS = "admin"
 MANAGER_GUI_READY = "managerGuiReady"
@@ -39,13 +39,16 @@ class ClientNetworkThread(threading.Thread):
             if serverResponse == "waiting for auth": #server is waiting for login data
                 while qMessage.empty(): sleep(1)
                 if not qMessage.empty(): #login data came from the gui
-                    messageToServer = qMessage.get().encode()
+                    guiResponse = qMessage.get()
+                    guiResponseList = guiResponse.split(";")
+                    global username
+                    username = guiResponseList[1]
+                    messageToServer = guiResponse.encode()
                     try: 
                         mySocket.send(messageToServer)
-                        # serverLoginResponse -> staffID;roleID
+                        # serverLoginResponse -> staffID;authResponse;roleID;hpCode;hpName;hpCityName
                         serverLoginResponse = mySocket.recv(1024).decode().split(";")
                         serverAuthResponse = serverLoginResponse[1]
-                        #serverAuthResponse = mySocket.recv(1024).decode()
                         print("Server auth response: ", serverAuthResponse)
                         if int(serverAuthResponse) == 0: 
                             mb.showerror("Error", "Login failed")
@@ -55,14 +58,15 @@ class ClientNetworkThread(threading.Thread):
                             qMessage.put(MANAGER_SUCCESS)
                             qMessage.put(serverLoginResponse[0]) # staffID
                             qMessage.put(serverLoginResponse[2]) # hpCode
+                            qMessage.put(serverLoginResponse[3]) # hpName
+                            qMessage.put(serverLoginResponse[4]) # hpCityName
                             self.root.destroy()
                             sleep(2) #wait until gui thread can take the queue message
                             while qMessage.empty(): sleep(1)
                             queryToServer = qMessage.get().encode()
                             mySocket.send(queryToServer)
                             serverQueryResponse = mySocket.recv(1024).decode()
-                            # create another Tk root just for preventing create
-                            # second empty window when info mb displayed
+                            # create another Tk root just for preventing create second empty window when info mb displayed
                             self.root = tk.Tk()
                             self.root.withdraw()
                             if serverQueryResponse == MANAGER_QUERY_SUCCESS:
@@ -111,13 +115,15 @@ if __name__ == '__main__':
     staffID = qMessage.get()
     print("status in ui thread", loginStatus)
     if(loginStatus == MANAGER_SUCCESS):
+        hpCode = qMessage.get()
+        hpName = qMessage.get()
+        hpCityName = qMessage.get()
         managerGuiRoot = tk.Tk()
-        managerGuiRoot.geometry('450x300')
+        managerGuiRoot.geometry('450x450')
         managerGuiRoot.protocol("WM_DELETE_WINDOW", end_app)
         managerGuiRoot.resizable(False, False)
         print("Main Thread:", threading.get_ident())
-        hpCode = qMessage.get()
-        managerGui = ManagerGui(managerGuiRoot, qMessage, staffID, hpCode)
+        managerGui = ManagerGui(managerGuiRoot, qMessage, staffID, hpCode, hpName, hpCityName, username)
         managerGuiRoot.mainloop()
     elif(loginStatus == ADMIN_SUCCESS): 
         AdminGuiRoot = tk.Tk()

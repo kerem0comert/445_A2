@@ -27,6 +27,26 @@ class Database():
             return queryTuple[0]
         except: return 0
 
+    def getHpName(self, HpCode):
+        dbCursor = self.db.cursor()
+        dbCursor.execute("SELECT hpName FROM HISTORICAL_PLACE WHERE hpCode = ?", (HpCode,))
+        queryResult = dbCursor.fetchall()
+        dbCursor.close()
+        try:
+            queryTuple = queryResult[0]
+            return queryTuple[0]
+        except: return "None"
+
+    def getHpCityName(self, HpCode):
+        dbCursor = self.db.cursor()
+        dbCursor.execute("SELECT c.cityName FROM HISTORICAL_PLACE hp, CITY c WHERE hp.hpCode = ? AND hp.hpCityCode = c.cityCode", (HpCode,))
+        queryResult = dbCursor.fetchall()
+        dbCursor.close()
+        try:
+            queryTuple = queryResult[0]
+            return queryTuple[0]
+        except: return "None"
+
     def sendStatistics(self, reportDetails):
         # reportDetails -> [totVisitors, maleVisitors, femaleVisitors, localVisitors, tourists, hpCode]
         try:

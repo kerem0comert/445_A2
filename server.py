@@ -21,7 +21,7 @@ class ServerThread(threading.Thread):
         username = responseArray[1]
         password = responseArray[2]
         loginResult = DB.login(username, password)
-        self.connection.send((str(loginResult[0]) + ";" + str(loginResult[1]) + ";" + str(DB.getHpCode(loginResult[0]))).encode())
+        self.connection.send((str(loginResult[0]) + ";" + str(loginResult[1]) + ";" + str(DB.getHpCode(loginResult[0])) + ";" + DB.getHpName(DB.getHpCode(loginResult[0])) + ";" + DB.getHpCityName(loginResult[0])).encode())
         print(self.address, ": login result sent.")
         clientResponse = self.connection.recv(1024).decode()
         if not clientResponse:
