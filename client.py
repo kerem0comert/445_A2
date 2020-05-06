@@ -119,6 +119,11 @@ class ClientNetworkThread(threading.Thread):
                     mySocket.send(queryToServer)
                     serverQueryResponse = mySocket.recv(1024).decode()
                     # ADD QUERY SELECTIONS HERE !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+                    #test only case 1
+                    self.root = tk.Tk()
+                    self.root.withdraw()
+                    mb.showinfo(title="Historical place with the most number of visitors is \n",message= "haha"+serverQueryResponse) 
+
                     end_app()
         
 

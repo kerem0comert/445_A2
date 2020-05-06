@@ -60,6 +60,11 @@ class ServerThread(threading.Thread):
             else:
                 queryResult = "QUERY INSERTION SUCCESSS".encode()
             self.connection.send(queryResult)
+        elif clientQueryResponse[0] == "adminQuery":
+            del clientQueryResponse[0]
+            # adminQuery -> [selection,place,date]
+            queryResult = str(DB.createReport(clientQueryResponse)).encode()
+            self.connection.send(queryResult)
         print(self.address, ": Finished!")
 
 HOST = 'localhost'
@@ -82,7 +87,7 @@ DB = Database()
 
 print("Listening on", serverSocket.getsockname())
 #auth -> [header, username, password]
-#adminQuery -> [header, selection]
+#adminQuery -> [header, selection,place,date]
 #insertDetails -> [header, totVisitors, maleVisitors, femalVisitors,
 #localVisitors, tourists]
 while 1:

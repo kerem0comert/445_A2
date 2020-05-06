@@ -104,13 +104,12 @@ class AdminGui():
         if(selection == 5):
             self.date = self.dateEntry.get()
             messageToServer = "adminQuery" + ";" + str(selection) + ";" + self.selectedPlace.get() + ";" + self.date
-            print("onclick: ", messageToServer)
         elif(selection ==3 or selection ==4):
             self.date = self.dateEntry.get()
             messageToServer = "adminQuery" + ";" + str(selection) + ";" + self.date
-            print("onclick: ", messageToServer)
         else:
-            print(selection)
             messageToServer = "adminQuery" + ";" + str(selection) #QUERY AND QUERY NUMBER message
-            print("onclick: ", messageToServer)
+            
             #root.destroy()
+        print("onclick: ", messageToServer)
+        self.qMessage.put(messageToServer)
