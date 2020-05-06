@@ -114,7 +114,7 @@ class Database():
             hpCode = int(queryDetails[1])
             date = queryDetails[2]
             dbCursor = self.db.cursor()
-            dbCursor.execute("SELECT numOfMaleVisitors, numOfFemaleVisitors, numOfLocalVisitors, numOfTourists FROM HISTORICAL_PLACE h, VISITOR v WHERE h.hpCode=v.hpCode and h.hpCode={} and v.date={}".format(hpCode, date))
+            dbCursor.execute("SELECT numOfMaleVisitors, numOfFemaleVisitors, numOfLocalVisitors, numOfTourists FROM HISTORICAL_PLACE h, VISITOR v WHERE h.hpCode=v.hpCode and h.hpCode={} and v.date='{}'".format(hpCode, date))
             queryResult = dbCursor.fetchall()
             dbCursor.close()
             try:
