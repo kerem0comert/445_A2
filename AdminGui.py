@@ -141,22 +141,22 @@ class AdminGui():
         root.withdraw()
         if (selection == 5):
             if(serverQueryResponse[0]!=0):
-                message = ""
-                message += serverQueryResponse[0] + "\n" + "V=" + serverQueryResponse[1] +" M=" + serverQueryResponse[2] + " F=" + serverQueryResponse[3] + " L=" + serverQueryResponse[4] + " T=" + serverQueryResponse[5] + "\n"
-                mb.showinfo(title="Query Result", message=message)
+                message_ = ""
+                message_ += "V=" + serverQueryResponse[0] +" M=" + serverQueryResponse[1] + " F=" + serverQueryResponse[2] + " L=" + serverQueryResponse[3] + " T=" + serverQueryResponse[4] + "\n"
+                mb.showinfo(title="Query Result", message=message_)
             else:
                 mb.showerror(title="Error",message= "Query Result Is Empty!")
         elif (selection == 3 or selection == 4):
             if(serverQueryResponse[0]!="None"):
-                message = ""
+                message_ = ""
                 if(selection==3):
                     for x in serverQueryResponse:
-                        message += serverQueryResponse[0] + "\n" + "V=" + serverQueryResponse[1] +" M=" + serverQueryResponse[2] + " F=" + serverQueryResponse[3] + " L=" + serverQueryResponse[4] + " T=" + serverQueryResponse[5] + "\n"
-                    message += "V=The Number Of Visitors\nM=The Number Of Male Visitors\nF=The Number Of Female Visitors\nL=The Number Of Local Visitors\nT=The Number Of Tourists"
-                    mb.showinfo(title="Query Result", message=message)
+                        message_ += serverQueryResponse[0] + "\n" + "V=" + serverQueryResponse[1] +" M=" + serverQueryResponse[2] + " F=" + serverQueryResponse[3] + " L=" + serverQueryResponse[4] + " T=" + serverQueryResponse[5] + "\n"
+                    message_ += "V=The Number Of Visitors\nM=The Number Of Male Visitors\nF=The Number Of Female Visitors\nL=The Number Of Local Visitors\nT=The Number Of Tourists"
+                    mb.showinfo(title="Query Result", message=message_)
                 else:
-                    message += serverQueryResponse[0] + "\n" + "V=" + serverQueryResponse[1] +" M=" + serverQueryResponse[2] + " F=" + serverQueryResponse[3] + " L=" + serverQueryResponse[4] + " T=" + serverQueryResponse[5] + "\n"
-                    mb.showinfo(title="Query Result", message=message)
+                    message_ += serverQueryResponse[0] + "\n" + "V=" + serverQueryResponse[1] +" M=" + serverQueryResponse[2] + " F=" + serverQueryResponse[3] + " L=" + serverQueryResponse[4] + " T=" + serverQueryResponse[5] + "\n"
+                    mb.showinfo(title="Query Result", message=message_)
             else:
                 mb.showerror(title="Error",message= "Query Result Is Empty!")
         elif (selection == 2):
