@@ -6,16 +6,17 @@ from tkinter import ttk
 
 class AdminGui():
     
-    def __init__(self, root, qMessage, cities, hp):
+    def __init__(self, root, qMessage, cities, hp,staffID):
         self.qMessage = qMessage
         self.cities = cities
         self.places = hp
-        root.title('Admin')
+        root.title('Welcome 10'+staffID+'A')
         self.v = tk.IntVar(root) #first one is seleceted initially
         self.v.set(1)
         self.selectedCity = tk.StringVar(root, value = "Please select")
         self.selectedPlace = tk.StringVar(root)
         self.date = "00/00/0000"
+        self.welcomeTitle= tk.Label(root, text='Welcome 10'+staffID+'A,\n').pack()
         self.rbValues = {"The historical place with the maximum number of visitors": 1,
                         "The city with the maximum number of visitors": 2,
                         "Extended details for each city" : 3,
