@@ -48,6 +48,7 @@ class Decode():
         elif reportSelection == 3:
             theList = []
             citiesList = queryResult.split(";")
+            citiesList.pop() # last is empty, remove it
             for city in citiesList:
                 tupleElemets = city.split(",")
                 theList.append((tupleElemets[0], int(tupleElemets[1]), int(tupleElemets[2]), int(tupleElemets[3]), int(tupleElemets[4])))

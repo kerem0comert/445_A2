@@ -119,9 +119,6 @@ class AdminGui():
         self.qMessage.put(self.bGenerateReport)
         self.qMessage.put(selection)
         self.qMessage.put(messageToServer)
-        #self.root = tk.Tk()
-        #self.root.withdraw()
-        
        
     def checkDateRegex(self):
         if not re.match(self.dateRegex, self.dateEntry.get()):
