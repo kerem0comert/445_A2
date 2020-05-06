@@ -105,15 +105,16 @@ class AdminGui():
             self.dateEntry.pack_forget()
 
     def createQuery(self):
-        if not re.match(self.dateRegex, self.dateEntry.get()):
-            mb.showerror("Date Error", "Date is not of dd/mm/yy format!")
-            return
+        
         self.bGenerateReport.config(state="disabled")
         selection = self.v.get()
         if(selection == 5):
             self.date = self.dateEntry.get()
             messageToServer = "adminQuery" + ";" + str(selection) + ";" + self.selectedPlace.get() + ";" + self.date
         elif(selection == 3 or selection == 4):
+            if not re.match(self.dateRegex, self.dateEntry.get()):
+                mb.showerror("Date Error", "Date is not of dd/mm/yy format!")
+                return
             messageToServer = "adminQuery" + ";" + str(selection) + ";" + self.dateEntry.get()
         else:
             messageToServer = "adminQuery" + ";" + str(selection) #QUERY AND QUERY NUMBER message
