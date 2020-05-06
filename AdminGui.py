@@ -152,12 +152,12 @@ class AdminGui():
                 if(selection==3):
                     for x in serverQueryResponse:
                         totVisitors = int(x[1]) + int(x[2])
-                        message_ += str(x[0]) + "\n" + "V=" + totVisitors +" M=" + str(x[1]) + " F=" + str(x[2]) + " L=" + str(x[3]) + " T=" + str(x[4]) + "\n"
+                        message_ += str(x[0]) + "\n" + "V=" + str(totVisitors) +" M=" + str(x[1]) + " F=" + str(x[2]) + " L=" + str(x[3]) + " T=" + str(x[4]) + "\n"
                     message_ += "V=The Number Of Visitors\nM=The Number Of Male Visitors\nF=The Number Of Female Visitors\nL=The Number Of Local Visitors\nT=The Number Of Tourists"
                     mb.showinfo(title="Query Result", message=message_)
                 else:
                     totVisitors = int(serverQueryResponse[1]) + int(serverQueryResponse[2])
-                    message_ += str(serverQueryResponse[0]) + "\n" + "V=" + totVisitors +" M=" + str(serverQueryResponse[1]) + " F=" + str(serverQueryResponse[2]) + " L=" + str(serverQueryResponse[3]) + " T=" + str(serverQueryResponse[4]) + "\n"
+                    message_ += str(serverQueryResponse[0]) + "\n" + "V=" + str(totVisitors) +" M=" + str(serverQueryResponse[1]) + " F=" + str(serverQueryResponse[2]) + " L=" + str(serverQueryResponse[3]) + " T=" + str(serverQueryResponse[4]) + "\n"
                     mb.showinfo(title="Query Result", message=message_)
             else:
                 mb.showerror(title="Error",message= "Query Result Is Empty!")
