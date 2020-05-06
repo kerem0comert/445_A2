@@ -106,7 +106,7 @@ class AdminGui():
             self.dateEntry.pack_forget()
 
     def createQuery(self):
-        
+        self.bGenerateReport.config(state="disabled")
         selection = self.v.get()
         if selection == 5:
             messageToServer = "adminQuery" + ";" + str(selection) + ";" + str(self.places.get(self.cities.get(self.dropdownForFifthCity.get())).get(self.dropdownForFifthPlace.get())) + ";" + self.dateEntry.get()
@@ -119,9 +119,9 @@ class AdminGui():
         self.qMessage.put(self.bGenerateReport)
         self.qMessage.put(selection)
         self.qMessage.put(messageToServer)
-        self.root = tk.Tk()
-        self.root.withdraw()
-        self.bGenerateReport.config(state="disabled")
+        #self.root = tk.Tk()
+        #self.root.withdraw()
+        
        
     def checkDateRegex(self):
         if not re.match(self.dateRegex, self.dateEntry.get()):
