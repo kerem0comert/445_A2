@@ -162,6 +162,6 @@ if __name__ == '__main__':
         AdminGuiRoot.protocol("WM_DELETE_WINDOW", end_app)
         AdminGuiRoot.resizable(False, False)
         print("Main Thread:", threading.get_ident())
-        adminGui = AdminGui(AdminGuiRoot, qMessage, cities, hp,staffID)
+        adminGui = AdminGui(AdminGuiRoot, qMessage, cities, hp, username)
         AdminGuiRoot.mainloop()
         # NOTHING SHOULD BE ADDED HERE!!!
