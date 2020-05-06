@@ -79,8 +79,8 @@ class AdminGui():
             self.dateTitle.pack_forget()
             self.dateEntry.pack_forget()
             self.extendedForFourth.pack(side=tk.TOP, ipady=5)
-            self.dateTitle.pack(side=tk.TOP, ipady=5)
-            self.dateEntry.pack(side=tk.TOP, ipady=5)
+            self.dropdownTitleCity.pack(side=tk.TOP, ipady=5)
+            self.dropdownForFifthCity.pack(side=tk.TOP, ipady=5)
         elif (selection == 5):
             self.extendedForFourth.pack_forget()
             self.extendedForThird.pack_forget()
@@ -105,14 +105,13 @@ class AdminGui():
     def createQuery(self):
         self.bGenerateReport.config(state="disabled")
         selection = self.v.get()
-        if(selection == 5):
+        if selection == 5:
+            messageToServer = "adminQuery" + ";" + str(selection) + ";" + str(self.places.get(self.cities.get(self.dropdownForFifthCity.get())).get(self.dropdownForFifthPlace.get())) + ";" + self.dateEntry.get()
+        elif selection == 4:
             self.date = self.dateEntry.get()
-            messageToServer = "adminQuery" + ";" + str(selection) + ";" + self.selectedPlace.get() + ";" + self.date
-        elif(selection == 3 or selection == 4):
-            self.date = self.dateEntry.get()
-            messageToServer = "adminQuery" + ";" + str(selection) + ";" + self.date
+            messageToServer = "adminQuery" + ";" + str(selection) + ";" + str(self.cities.get(self.dropdownForFifthCity.get()))
         else:
-            messageToServer = "adminQuery" + ";" + str(selection) #QUERY AND QUERY NUMBER message
+            messageToServer = "adminQuery" + ";" + str(selection)
         print("onclick: ", messageToServer)
         self.qMessage.put(self.bGenerateReport)
         self.qMessage.put(selection)

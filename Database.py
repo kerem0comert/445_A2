@@ -72,17 +72,54 @@ class Database():
 
     def createReport(self, queryDetails):
         selection = int(queryDetails[0])
-        if (selection ==1):
+        if (selection == 1):
             dbCursor = self.db.cursor()
             dbCursor.execute("SELECT h.hpName FROM HISTORICAL_PLACE h, (SELECT MAX(numOfFemaleVisitors+numOfMaleVisitors) AS MaximumVisitors, hpCode FROM VISITOR) v WHERE h.hpCode=v.hpCode")
             queryResult = dbCursor.fetchall()
             dbCursor.close()
-            queryTuple = queryResult[0]
-            return queryTuple[0]
-        elif (selection ==2):pass
-        elif (selection ==3):pass
-        elif (selection ==4):pass
-        elif (selection ==5):pass
+            try:
+                queryTuple = queryResult[0]
+                return queryTuple[0]
+            except: return "None"
+        elif (selection == 2):
+            dbCursor = self.db.cursor()
+            dbCursor.execute('''SELECT cityName, MAX(sumFemale+sumMale) FROM 
+                               (SELECT cityName, sum(numOfFemaleVisitors) as sumFemale, sum(numOfMaleVisitors) as sumMale FROM 
+                               HISTORICAL_PLACE h, CITY c, VISITOR v WHERE h.hpCode=v.hpCode and c.cityCode=h.hpCityCode GROUP BY cityName)''')
+            queryResult = dbCursor.fetchall()
+            dbCursor.close()
+            try:
+                queryTuple = queryResult[0]
+                return queryTuple[0]
+            except: return "None"
+        elif (selection == 3):
+            dbCursor = self.db.cursor()
+            dbCursor.execute('''SELECT cityName, SUM(numOfMaleVisitors), sum(numOfFemaleVisitors), sum(numOfLocalVisitors), sum(numOfTourists) FROM 
+                                HISTORICAL_PLACE h, CITY c, VISITOR v WHERE h.hpCode=v.hpCode and c.cityCode=h.hpCityCode GROUP BY cityName''')
+            queryResult = dbCursor.fetchall()
+            dbCursor.close()
+            return queryResult
+        elif (selection == 4):
+            hpCityCode = int(queryDetails[1])
+            dbCursor = self.db.cursor()
+            dbCursor.execute('''SELECT cityName, SUM(numOfMaleVisitors), sum(numOfFemaleVisitors), sum(numOfLocalVisitors), sum(numOfTourists) FROM 
+                                HISTORICAL_PLACE h, CITY c, VISITOR v WHERE h.hpCode=v.hpCode and c.cityCode=h.hpCityCode and h.hpCityCode=? GROUP BY 
+                                cityName''', (hpCityCode,))
+            queryResult = dbCursor.fetchall()
+            dbCursor.close()
+            try:
+                return queryResult[0]
+            except: return ("None", 0, 0, 0, 0)
+        elif (selection == 5):
+            hpCode = int(queryDetails[1])
+            date = queryDetails[2]
+            dbCursor = self.db.cursor()
+            dbCursor.execute("SELECT numOfMaleVisitors, numOfFemaleVisitors, numOfLocalVisitors, numOfTourists FROM HISTORICAL_PLACE h, VISITOR v WHERE h.hpCode=v.hpCode and h.hpCode={} and v.date={}".format(hpCode, date))
+            queryResult = dbCursor.fetchall()
+            dbCursor.close()
+            try:
+                return queryResult[0]
+            except: return (0, 0, 0, 0)
         
 
 

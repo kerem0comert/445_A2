@@ -19,6 +19,20 @@ class Encode():
             stringBuilder += str(theTuple[0]) + "," + str(theTuple[1]) + "," + theTuple[2] + ";"
         return stringBuilder.encode()
 
+    @staticmethod
+    def encodeReport(dbResponse, selection):
+        stringBuilder = ""
+        if selection == 1 or selection == 2:
+            stringBuilder += dbResponse
+        elif selection == 3:
+            for theTuple in dbResponse:
+                stringBuilder += theTuple[0] + "," + str(theTuple[1]) + "," + str(theTuple[2]) + "," + str(theTuple[3]) + "," + str(theTuple[4]) + ";"
+        elif selection == 4:
+            stringBuilder += dbResponse[0] + "," + str(dbResponse[1]) + "," + str(dbResponse[2]) + "," + str(dbResponse[3]) + "," + str(dbResponse[4])
+        elif selection == 5:
+            stringBuilder += str(dbResponse[0]) + "," + str(dbResponse[1]) + "," + str(dbResponse[2]) + "," + str(dbResponse[3])
+        return stringBuilder.encode()
+
 class ServerThread(threading.Thread):
     def __init__(self, connection, address):
         self.connection = connection
@@ -63,8 +77,8 @@ class ServerThread(threading.Thread):
                 self.connection.send(queryResult)
             elif clientQueryResponse[0] == "adminQuery":
                 del clientQueryResponse[0]
-                # adminQuery -> [selection,place,date]
-                queryResult = str(DB.createReport(clientQueryResponse)).encode()
+                selection = int(clientQueryResponse[0])
+                queryResult = Encode.encodeReport(DB.createReport(clientQueryResponse), selection)
                 self.connection.send(queryResult)
 
 HOST = 'localhost'

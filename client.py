@@ -41,6 +41,23 @@ class Decode():
                 dict[int(hpInfo[0])].update({hpInfo[2]: int(hpInfo[1])})
         return dict
 
+    @staticmethod
+    def decodeReportResults(reportSelection, queryResult):
+        if reportSelection == 1 or reportSelection == 2:
+            return queryResult
+        elif reportSelection == 3:
+            theList = []
+            citiesList = queryResult.split(";")
+            for city in citiesList:
+                tupleElemets = city.split(",")
+                theList.append((tupleElemets[0], int(tupleElemets[1]), int(tupleElemets[2]), int(tupleElemets[3]), int(tupleElemets[4])))
+            return theList
+        elif reportSelection == 4:
+            tupleElemets = queryResult.split(",")
+            return (tupleElemets[0], int(tupleElemets[1]), int(tupleElemets[2]), int(tupleElemets[3]), int(tupleElemets[4]))
+        elif reportSelection == 5:
+            tupleElemets = queryResult.split(",")
+            return (int(tupleElemets[0]), int(tupleElemets[1]), int(tupleElemets[2]), int(tupleElemets[3]))
 
 class ClientNetworkThread(threading.Thread):
     def __init__(self, root):
@@ -121,9 +138,8 @@ class ClientNetworkThread(threading.Thread):
                         messageFromGUI = qMessage.get()
                         queryToServer = messageFromGUI.encode()
                         mySocket.send(queryToServer)
-                        AdminGui.displayMessage(reportSelection, mySocket.recv(1024).decode())
+                        AdminGui.displayMessage(reportSelection, Decode.decodeReportResults(reportSelection, mySocket.recv(1024).decode()))
                         reportButton.config(state="normal")
-        
 
 def end_app():
     try:
