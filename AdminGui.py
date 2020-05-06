@@ -2,6 +2,7 @@ import tkinter as tk
 import tkinter.messagebox as mb
 from tkinter import ttk
 from time import sleep
+import re
 
 #from DBMS_Project import *
 
@@ -18,6 +19,7 @@ class AdminGui():
         self.selectedCity = tk.StringVar(root, value = "Please select")
         self.selectedPlace = tk.StringVar(root, value = "Please select")
         self.date = "00/00/0000"
+        self.dateRegex = '(?:[0-9]{2}/){2}[0-9]{2}'
 
         self.welcomeTitle= tk.Label(root, text="Welcome " + self.username + "!").pack()
 
@@ -44,7 +46,7 @@ class AdminGui():
         self.dropdownForFifthPlace = ttk.Combobox(root, textvariable=self.selectedPlace, state="disabled", width=25)
         self.dropdownForFifthPlace.bind('<<ComboboxSelected>>', self.packDate)
         
-        self.dateTitle= tk.Label(root, text="Enter Date:")
+        self.dateTitle= tk.Label(root, text="Enter Date (dd/mm/yy):")
         self.dateEntry = tk.Entry(root)
 
     def updateBox(self, eventObject):
@@ -103,14 +105,16 @@ class AdminGui():
             self.dateEntry.pack_forget()
 
     def createQuery(self):
+        if not re.match(self.dateRegex, self.dateEntry.get()):
+            mb.showerror("Date Error", "Date is not of dd/mm/yy format!")
+            return
         self.bGenerateReport.config(state="disabled")
         selection = self.v.get()
         if(selection == 5):
             self.date = self.dateEntry.get()
             messageToServer = "adminQuery" + ";" + str(selection) + ";" + self.selectedPlace.get() + ";" + self.date
         elif(selection == 3 or selection == 4):
-            self.date = self.dateEntry.get()
-            messageToServer = "adminQuery" + ";" + str(selection) + ";" + self.date
+            messageToServer = "adminQuery" + ";" + str(selection) + ";" + self.dateEntry.get()
         else:
             messageToServer = "adminQuery" + ";" + str(selection) #QUERY AND QUERY NUMBER message
         print("onclick: ", messageToServer)
