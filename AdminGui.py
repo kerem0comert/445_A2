@@ -140,8 +140,32 @@ class AdminGui():
         root = tk.Tk()
         root.withdraw()
         if (selection == 5):
-            pass
+            if(serverQueryResponse[0]!=0):
+                message = ""
+                message += serverQueryResponse[0] + "\n" + "V=" + serverQueryResponse[1] +" M=" + serverQueryResponse[2] + " F=" + serverQueryResponse[3] + " L=" + serverQueryResponse[4] + " T=" + serverQueryResponse[5] + "\n"
+                mb.showinfo(title="Query Result", message=message)
+            else:
+                mb.showerror(title="Error",message= "Query Result Is Empty!")
         elif (selection == 3 or selection == 4):
-            pass
+            if(serverQueryResponse[0]!="None"):
+                message = ""
+                if(selection==3):
+                    for x in serverQueryResponse:
+                        message += serverQueryResponse[0] + "\n" + "V=" + serverQueryResponse[1] +" M=" + serverQueryResponse[2] + " F=" + serverQueryResponse[3] + " L=" + serverQueryResponse[4] + " T=" + serverQueryResponse[5] + "\n"
+                    message += "V=The Number Of Visitors\nM=The Number Of Male Visitors\nF=The Number Of Female Visitors\nL=The Number Of Local Visitors\nT=The Number Of Tourists"
+                    mb.showinfo(title="Query Result", message=message)
+                else:
+                    message += serverQueryResponse[0] + "\n" + "V=" + serverQueryResponse[1] +" M=" + serverQueryResponse[2] + " F=" + serverQueryResponse[3] + " L=" + serverQueryResponse[4] + " T=" + serverQueryResponse[5] + "\n"
+                    mb.showinfo(title="Query Result", message=message)
+            else:
+                mb.showerror(title="Error",message= "Query Result Is Empty!")
+        elif (selection == 2):
+            if(serverQueryResponse!="None"):
+                mb.showinfo(title="Query Result",message= "City with the most number of visitors is "+serverQueryResponse)
+            else:
+                mb.showerror(title="Error",message= "Query Result Is Empty!")
         else:
-            mb.showinfo(title="Historical place with the most number of visitors is", message=serverQueryResponse)
+            if(serverQueryResponse!="None"):
+                mb.showinfo(title="Query Result", message="Historical place with the most number of visitors is "+serverQueryResponse)
+            else:
+                mb.showerror(title="Error",message= "Query Result Is Empty!")
