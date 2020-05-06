@@ -15,7 +15,7 @@ class AdminGui():
         self.v = tk.IntVar(root) #first one is selected initially
         self.v.set(1)
         self.selectedCity = tk.StringVar(root, value = "Please select")
-        self.selectedPlace = tk.StringVar(root)
+        self.selectedPlace = tk.StringVar(root, value = "Please select")
         self.date = "00/00/0000"
 
         self.welcomeTitle= tk.Label(root, text="Welcome " + self.username + "!").pack()
@@ -47,8 +47,8 @@ class AdminGui():
 
     def updateBox(self, eventObject):
         self.dropdownForFifthPlace["values"] = list(self.places.get(self.cities.get(self.dropdownForFifthCity.get())).keys())
-        self.dropdownForFifthPlace.current(0)
         self.dropdownForFifthPlace["state"] = "readonly"
+
     def packDate(self,*args):
         self.dateTitle.pack(side=tk.TOP, ipady=5)
         self.dateEntry.pack(side=tk.TOP, ipady=5)
