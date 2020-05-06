@@ -46,26 +46,26 @@ class ServerThread(threading.Thread):
             sleep(0.5)
             self.connection.send(Encode.encodeHpList(DB.getHistoricalPlaces()))
         print(self.address, ": login result sent.")
-        clientResponse = self.connection.recv(1024).decode()
-        if not clientResponse:
-            print(self.address, ": Connection Closed!")
-            quit()
-        print(self.address, ": clientResponse :", clientResponse)
-        clientQueryResponse = clientResponse.split(";")
-        if clientQueryResponse[0] == "insertDetails":
-            del clientQueryResponse[0]
-            # clientQueryResponse -> [totVisitors, maleVisitors, femaleVisitors, localVisitors, tourists, hpCode]
-            if DB.sendStatistics(clientQueryResponse):
-                queryResult = "QUERY INSERTION FAILED".encode()
-            else:
-                queryResult = "QUERY INSERTION SUCCESSS".encode()
-            self.connection.send(queryResult)
-        elif clientQueryResponse[0] == "adminQuery":
-            del clientQueryResponse[0]
-            # adminQuery -> [selection,place,date]
-            queryResult = str(DB.createReport(clientQueryResponse)).encode()
-            self.connection.send(queryResult)
-        print(self.address, ": Finished!")
+        while 1:
+            clientResponse = self.connection.recv(1024).decode()
+            if not clientResponse:
+                print(self.address, ": Connection Closed!")
+                quit()
+            print(self.address, ": clientResponse :", clientResponse)
+            clientQueryResponse = clientResponse.split(";")
+            if clientQueryResponse[0] == "insertDetails":
+                del clientQueryResponse[0]
+                # clientQueryResponse -> [totVisitors, maleVisitors, femaleVisitors, localVisitors, tourists, hpCode]
+                if DB.sendStatistics(clientQueryResponse):
+                    queryResult = "QUERY INSERTION FAILED".encode()
+                else:
+                    queryResult = "QUERY INSERTION SUCCESSS".encode()
+                self.connection.send(queryResult)
+            elif clientQueryResponse[0] == "adminQuery":
+                del clientQueryResponse[0]
+                # adminQuery -> [selection,place,date]
+                queryResult = str(DB.createReport(clientQueryResponse)).encode()
+                self.connection.send(queryResult)
 
 HOST = 'localhost'
 PORT = 5000

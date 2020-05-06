@@ -1,6 +1,7 @@
 import tkinter as tk
 import tkinter.messagebox as mb
 from tkinter import ttk
+from time import sleep
 
 #from DBMS_Project import *
 
@@ -29,7 +30,8 @@ class AdminGui():
         for (text, value) in self.rbValues.items(): 
             tk.Radiobutton(root, text=text, variable=self.v, 
                         value=value, command = self.printExtra).pack(side=tk.TOP, ipady=5)
-        self.bGenerateReport = tk.Button(root, text='CREATE REPORT',command= self.createQuery).pack()
+        self.bGenerateReport = tk.Button(root, text='CREATE REPORT',command= self.createQuery)
+        self.bGenerateReport.pack()
         self.extendedForThird = tk.Label(root, text = "The number of visitors, the number of male visitors, the number of female visitors" + 
         "\nand the number of local visitors and the number of tourists for each city  ",font='Times 10')
         self.extendedForFourth = tk.Label(root, text = "The number of visitors, the number of male visitors, the number of female visitors \nand the number of local visitors and the number of tourists for each historical place in a given city",font='Times 10')
@@ -99,17 +101,31 @@ class AdminGui():
             self.dropdownTitlePlace.pack_forget()
             self.dateTitle.pack_forget()
             self.dateEntry.pack_forget()
+
     def createQuery(self):
+        self.bGenerateReport.config(state="disabled")
         selection = self.v.get()
         if(selection == 5):
             self.date = self.dateEntry.get()
             messageToServer = "adminQuery" + ";" + str(selection) + ";" + self.selectedPlace.get() + ";" + self.date
-        elif(selection ==3 or selection ==4):
+        elif(selection == 3 or selection == 4):
             self.date = self.dateEntry.get()
             messageToServer = "adminQuery" + ";" + str(selection) + ";" + self.date
         else:
             messageToServer = "adminQuery" + ";" + str(selection) #QUERY AND QUERY NUMBER message
-            
-            #root.destroy()
         print("onclick: ", messageToServer)
+        self.qMessage.put(self.bGenerateReport)
+        self.qMessage.put(selection)
         self.qMessage.put(messageToServer)
+
+    @staticmethod
+    def displayMessage(selection, serverQueryResponse):
+        # create another Tk root just for preventing create second empty window when info mb displayed
+        root = tk.Tk()
+        root.withdraw()
+        if (selection == 5):
+            pass
+        elif (selection == 3 or selection == 4):
+            pass
+        else:
+            mb.showinfo(title="Historical place with the most number of visitors is", message=serverQueryResponse)

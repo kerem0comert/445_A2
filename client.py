@@ -113,18 +113,16 @@ class ClientNetworkThread(threading.Thread):
                     qMessage.put(Decode.decodeHistoricalPlaces(mySocket.recv(1024).decode())) # historical places
                     mb.showinfo("Login", "Logged in successfully!")
                     self.root.destroy()
-                    sleep(2) #wait until gui thread can take the queue message
-                    while qMessage.empty(): sleep(1)
-                    queryToServer = qMessage.get().encode()
-                    mySocket.send(queryToServer)
-                    serverQueryResponse = mySocket.recv(1024).decode()
-                    # ADD QUERY SELECTIONS HERE !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-                    #test only case 1
-                    self.root = tk.Tk()
-                    self.root.withdraw()
-                    mb.showinfo(title="Historical place with the most number of visitors is \n",message= "haha"+serverQueryResponse) 
-
-                    end_app()
+                    sleep(1) #wait until gui thread can take the queue message
+                    while True :
+                        while qMessage.empty(): sleep(1)
+                        reportButton = qMessage.get()
+                        reportSelection = qMessage.get()
+                        messageFromGUI = qMessage.get()
+                        queryToServer = messageFromGUI.encode()
+                        mySocket.send(queryToServer)
+                        AdminGui.displayMessage(reportSelection, mySocket.recv(1024).decode())
+                        reportButton.config(state="normal")
         
 
 def end_app():

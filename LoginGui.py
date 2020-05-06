@@ -27,7 +27,7 @@ class LoginGui():
         username = self.entryUsername.get()
         password = self.entryPassword.get() 
         if not username: mb.showerror("Error", "Username cannot be empty!")
-        if not password: mb.showerror("Error", "Password cannot be empty!")
+        elif not password: mb.showerror("Error", "Password cannot be empty!")
         else:
             self.buttonLogin.config(state="disabled")
             messageToServer = "auth" + ";" + username + ";" + password

@@ -69,20 +69,20 @@ class Database():
             self.db.commit()
             return 0
         except: return 1 # statistics can be only 1 per day
+
     def createReport(self, queryDetails):
-        if (queryDetails[0] ==1):
+        selection = int(queryDetails[0])
+        if (selection ==1):
             dbCursor = self.db.cursor()
             dbCursor.execute("SELECT h.hpName FROM HISTORICAL_PLACE h, (SELECT MAX(numOfFemaleVisitors+numOfMaleVisitors) AS MaximumVisitors, hpCode FROM VISITOR) v WHERE h.hpCode=v.hpCode")
             queryResult = dbCursor.fetchall()
             dbCursor.close()
-            try:
-                queryTuple = queryResult[0]
-                return queryTuple[0]
-            except: return "None"
-        elif (queryDetails[0] ==2):pass
-        elif (queryDetails[0] ==3):pass
-        elif (queryDetails[0] ==4):pass
-        elif (queryDetails[0] ==5):pass
+            queryTuple = queryResult[0]
+            return queryTuple[0]
+        elif (selection ==2):pass
+        elif (selection ==3):pass
+        elif (selection ==4):pass
+        elif (selection ==5):pass
         
 
 
