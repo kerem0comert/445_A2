@@ -36,6 +36,7 @@ class AdminGui():
         self.dropdownForFifthCity.bind('<<ComboboxSelected>>', self.updateBox)
         self.dropdownTitlePlace= tk.Label(root, text="Choose a Place")
         self.dropdownForFifthPlace = ttk.Combobox(root, textvariable=self.selectedPlace, state="disabled", width=25)
+        self.dropdownForFifthPlace.bind('<<ComboboxSelected>>', self.packDate)
         
         self.dateTitle= tk.Label(root, text="Enter Date:")
         self.dateEntry = tk.Entry(root)
@@ -44,6 +45,9 @@ class AdminGui():
         self.dropdownForFifthPlace["values"] = list(self.places.get(self.cities.get(self.dropdownForFifthCity.get())).keys())
         self.dropdownForFifthPlace.current(0)
         self.dropdownForFifthPlace["state"] = "readonly"
+    def packDate(self,*args):
+        self.dateTitle.pack(side=tk.TOP, ipady=5)
+        self.dateEntry.pack(side=tk.TOP, ipady=5)
 
     def printExtra(self):
         selection = self.v.get()
