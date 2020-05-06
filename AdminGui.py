@@ -9,6 +9,7 @@ import re
 class AdminGui():
     
     def __init__(self, root, qMessage, cities, hp, username):
+        self.root = root
         self.qMessage = qMessage
         self.cities = cities
         self.places = hp
@@ -19,7 +20,7 @@ class AdminGui():
         self.selectedCity = tk.StringVar(root, value = "Please select")
         self.selectedPlace = tk.StringVar(root, value = "Please select")
         self.date = "00/00/0000"
-        self.dateRegex = '(?:[0-9]{2}/){2}[0-9]{2}'
+        self.dateRegex = '^[0-9]{4}-[0-9]{2}-[0-9]{2}$'
 
         self.welcomeTitle= tk.Label(root, text="Welcome " + self.username + "!").pack()
 
@@ -46,7 +47,7 @@ class AdminGui():
         self.dropdownForFifthPlace = ttk.Combobox(root, textvariable=self.selectedPlace, state="disabled", width=25)
         self.dropdownForFifthPlace.bind('<<ComboboxSelected>>', self.packDate)
         
-        self.dateTitle= tk.Label(root, text="Enter Date (dd/mm/yy):")
+        self.dateTitle= tk.Label(root, text="Enter Date (yyyy-mm-dd):")
         self.dateEntry = tk.Entry(root)
 
     def updateBox(self, eventObject):
@@ -106,15 +107,12 @@ class AdminGui():
 
     def createQuery(self):
         
-        self.bGenerateReport.config(state="disabled")
         selection = self.v.get()
         if(selection == 5):
-            self.date = self.dateEntry.get()
-            messageToServer = "adminQuery" + ";" + str(selection) + ";" + self.selectedPlace.get() + ";" + self.date
-        elif(selection == 3 or selection == 4):
-            if not re.match(self.dateRegex, self.dateEntry.get()):
-                mb.showerror("Date Error", "Date is not of dd/mm/yy format!")
-                return
+            self.checkDateRegex()
+            messageToServer = "adminQuery" + ";" + str(selection) + ";" + self.selectedPlace.get() + ";" + self.dateEntry.get()
+        if(selection == 3 or selection == 4):
+            self.checkDateRegex()
             messageToServer = "adminQuery" + ";" + str(selection) + ";" + self.dateEntry.get()
         else:
             messageToServer = "adminQuery" + ";" + str(selection) #QUERY AND QUERY NUMBER message
@@ -122,6 +120,19 @@ class AdminGui():
         self.qMessage.put(self.bGenerateReport)
         self.qMessage.put(selection)
         self.qMessage.put(messageToServer)
+        self.root = tk.Tk()
+        self.root.withdraw()
+        self.bGenerateReport.config(state="disabled")
+       
+    def checkDateRegex(self):
+        if not re.match(self.dateRegex, self.dateEntry.get()):
+                self.root = tk.Tk()
+                self.root.withdraw()
+                mb.showerror("Date Error", "Date is not of yyyy-mm-dd format!")
+                self.root.destroy()
+                self.bGenerateReport.config(state="normal")
+                return
+
 
     @staticmethod
     def displayMessage(selection, serverQueryResponse):
