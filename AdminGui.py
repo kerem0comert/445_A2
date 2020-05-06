@@ -81,7 +81,16 @@ class AdminGui():
             self.dropdownForFifthCity.pack(side=tk.TOP, ipady=5)
             self.dropdownTitlePlace.pack(side=tk.TOP, ipady=5)
             self.dropdownForFifthPlace.pack(side=tk.TOP, ipady=5)
-        
+        else:
+            self.extendedForThird.pack_forget()
+            self.extendedForFourth.pack_forget()
+            self.extendedForFifth.pack_forget()
+            self.dropdownForFifthCity.pack_forget()
+            self.dropdownTitleCity.pack_forget()
+            self.dropdownForFifthPlace.pack_forget()
+            self.dropdownTitlePlace.pack_forget()
+            self.dateTitle.pack_forget()
+            self.dateEntry.pack_forget()
     def createQuery(self):
         selection = self.v.get()
         if(selection == 5):
