@@ -2,12 +2,14 @@ import tkinter as tk
 import tkinter.messagebox as mb
 from tkinter import ttk
 from time import sleep
+import re
 
 #from DBMS_Project import *
 
 class AdminGui():
     
     def __init__(self, root, qMessage, cities, hp, username):
+        self.root = root
         self.qMessage = qMessage
         self.cities = cities
         self.places = hp
@@ -18,6 +20,7 @@ class AdminGui():
         self.selectedCity = tk.StringVar(root, value = "Please select")
         self.selectedPlace = tk.StringVar(root, value = "Please select")
         self.date = "00/00/0000"
+        self.dateRegex = '^[0-9]{4}-[0-9]{2}-[0-9]{2}$'
 
         self.welcomeTitle= tk.Label(root, text="Welcome " + self.username + "!").pack()
 
@@ -44,7 +47,7 @@ class AdminGui():
         self.dropdownForFifthPlace = ttk.Combobox(root, textvariable=self.selectedPlace, state="disabled", width=25)
         self.dropdownForFifthPlace.bind('<<ComboboxSelected>>', self.packDate)
         
-        self.dateTitle= tk.Label(root, text="Enter Date:")
+        self.dateTitle= tk.Label(root, text="Enter Date (yyyy-mm-dd):")
         self.dateEntry = tk.Entry(root)
 
     def updateBox(self, eventObject):
@@ -103,7 +106,7 @@ class AdminGui():
             self.dateEntry.pack_forget()
 
     def createQuery(self):
-        self.bGenerateReport.config(state="disabled")
+        
         selection = self.v.get()
         if selection == 5:
             messageToServer = "adminQuery" + ";" + str(selection) + ";" + str(self.places.get(self.cities.get(self.dropdownForFifthCity.get())).get(self.dropdownForFifthPlace.get())) + ";" + self.dateEntry.get()
@@ -116,6 +119,19 @@ class AdminGui():
         self.qMessage.put(self.bGenerateReport)
         self.qMessage.put(selection)
         self.qMessage.put(messageToServer)
+        self.root = tk.Tk()
+        self.root.withdraw()
+        self.bGenerateReport.config(state="disabled")
+       
+    def checkDateRegex(self):
+        if not re.match(self.dateRegex, self.dateEntry.get()):
+                self.root = tk.Tk()
+                self.root.withdraw()
+                mb.showerror("Date Error", "Date is not of yyyy-mm-dd format!")
+                self.root.destroy()
+                self.bGenerateReport.config(state="normal")
+                return
+
 
     @staticmethod
     def displayMessage(selection, serverQueryResponse):
@@ -123,8 +139,35 @@ class AdminGui():
         root = tk.Tk()
         root.withdraw()
         if (selection == 5):
-            pass
+            if(serverQueryResponse[0]!=0):
+                totVisitors = int(serverQueryResponse[0]) + int(serverQueryResponse[1])
+                message_ = ""
+                message_ += "V=" + totVisitors +" M=" + str(serverQueryResponse[0]) + " F=" + str(serverQueryResponse[1]) + " L=" + str(serverQueryResponse[2]) + " T=" + str(serverQueryResponse[3]) + "\n"
+                mb.showinfo(title="Query Result", message=message_)
+            else:
+                mb.showerror(title="Error",message= "Query Result Is Empty!")
         elif (selection == 3 or selection == 4):
-            pass
+            if(serverQueryResponse[0]!="None"):
+                message_ = ""
+                if(selection==3):
+                    for x in serverQueryResponse:
+                        totVisitors = int(x[1]) + int(x[2])
+                        message_ += str(x[0]) + "\n" + "V=" + totVisitors +" M=" + str(x[1]) + " F=" + str(x[2]) + " L=" + str(x[3]) + " T=" + str(x[4]) + "\n"
+                    message_ += "V=The Number Of Visitors\nM=The Number Of Male Visitors\nF=The Number Of Female Visitors\nL=The Number Of Local Visitors\nT=The Number Of Tourists"
+                    mb.showinfo(title="Query Result", message=message_)
+                else:
+                    totVisitors = int(serverQueryResponse[1]) + int(serverQueryResponse[2])
+                    message_ += str(serverQueryResponse[0]) + "\n" + "V=" + totVisitors +" M=" + str(serverQueryResponse[1]) + " F=" + str(serverQueryResponse[2]) + " L=" + str(serverQueryResponse[3]) + " T=" + str(serverQueryResponse[4]) + "\n"
+                    mb.showinfo(title="Query Result", message=message_)
+            else:
+                mb.showerror(title="Error",message= "Query Result Is Empty!")
+        elif (selection == 2):
+            if(serverQueryResponse!="None"):
+                mb.showinfo(title="Query Result",message= "City with the most number of visitors is "+serverQueryResponse)
+            else:
+                mb.showerror(title="Error",message= "Query Result Is Empty!")
         else:
-            mb.showinfo(title="Historical place with the most number of visitors is", message=serverQueryResponse)
+            if(serverQueryResponse!="None"):
+                mb.showinfo(title="Query Result", message="Historical place with the most number of visitors is "+serverQueryResponse)
+            else:
+                mb.showerror(title="Error",message= "Query Result Is Empty!")
